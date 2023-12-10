@@ -1,0 +1,21 @@
+<!-- html -->
+<template>
+  <t-space>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+    <t-button>按钮</t-button>
+  </t-space>
+</template>

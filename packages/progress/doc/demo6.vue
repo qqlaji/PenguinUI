@@ -1,0 +1,50 @@
+<!-- html -->
+<template>
+  <t-space>
+    <t-progress
+      :percent="20"
+      progressType="circle"
+      :circleSize="120"
+      isShowText
+      roundCorner
+    ></t-progress>
+    <t-progress
+      :percent="40"
+      bgColor="#505050"
+      progressType="circle"
+      :circleSize="120"
+      isShowText
+      roundCorner
+    ></t-progress>
+    <t-progress
+      :percent="60"
+      currentStatus="OTHER"
+      progressType="circle"
+      :circleSize="120"
+      isShowText
+      roundCorner
+    ></t-progress>
+    <t-progress
+      :percent="90"
+      currentStatus="FAIL"
+      progressType="circle"
+      :circleSize="120"
+      :circleHeight="10"
+      isShowText
+    ></t-progress>
+    <t-progress
+      :percent="100"
+      currentStatus="SUCCESS"
+      progressType="circle"
+      :circleSize="120"
+      :circleHeight="10"
+      isShowText
+    >
+    </t-progress>
+  </t-space>
+</template>
+<style scoped>
+.penguin-progress {
+  margin-bottom: 10px;
+}
+</style>

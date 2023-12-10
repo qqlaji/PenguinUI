@@ -1,0 +1,126 @@
+<!-- html -->
+<template>
+  <t-popover
+    trigger="click"
+    placement="right"
+    width="600"
+    @after-enter="AfterEneter"
+  >
+    <div style="width:800px">
+      <t-table :options="options" size="default">
+        <template #head-job="item">
+          <t-dropdown
+            :title="item.scope.title"
+            :options="dorpoptions1"
+            @change="dropchange1"
+            trigger="hover"
+            size="mini"
+          ></t-dropdown>
+        </template>
+        <template #id="item">
+          <div>{{ item.scope.row.id }}</div>
+        </template>
+        <template #action="item">
+          <t-button
+            type="text"
+            leftIcon="t-icon-edit"
+            size="small"
+            :disabled="item.scope.rowIndex % 2 == 0"
+            >编辑</t-button
+          >
+          <t-button
+            type="text"
+            leftIcon="t-icon-ashbin"
+            style="color: #ec3437"
+            size="small"
+            >删除</t-button
+          >
+        </template>
+      </t-table>
+    </div>
+    <!--  -->
+    <template #reference>
+      <t-button size="medium">click激活</t-button>
+    </template>
+  </t-popover>
+</template>
+
+<!-- js -->
+<script setup>
+import { reactive, ref } from "vue";
+const state = reactive({
+  options: {
+    fileds: [
+      {
+        field: "id",
+        title: "ID",
+        align: "center",
+      },
+      {
+        field: "name",
+        title: "姓名",
+        align: "center",
+      },
+      {
+        field: "job",
+        title: "职业",
+        align: "center",
+      },
+      {
+        field: "address",
+        title: "地址",
+      },
+      {
+        field: "from",
+        title: "籍贯",
+      },
+      {
+        field: "action",
+        title: "操作",
+        width: "200px",
+        align: "center",
+      },
+    ],
+    datas: [
+      {
+        id: 10,
+        name: "王小二",
+        job: "放羊娃",
+        address: "在那遥远的小山村",
+        from: "民间流传故事",
+      },
+      {
+        id: 13,
+        name: "猪八戒",
+        job: "徒弟",
+        address: "高老庄",
+        from: "西游记神话故事",
+      },
+      {
+        id: 2,
+        name: "刘老四",
+        job: "农民",
+        address: "可能在中国",
+        from: "想象出来的",
+      },
+      {
+        id: 11,
+        name: "白骨精",
+        job: "妖精",
+        address: "西游记",
+        from: "西游记神话故事",
+      },
+    ],
+  },
+  dorpoptions1: [
+    { label: "放羊娃", icon: "t-icon-file" },
+    { label: "徒弟", icon: "t-icon-keyboard-9" },
+    { label: "农民", icon: "t-icon-link" },
+    { label: "妖精", icon: "t-icon-file" },
+  ],
+});
+const dropchange1 = (item, index) => {
+  console.log(item, index);
+};
+const { dorpoptions1,options } = state;
+</script>
