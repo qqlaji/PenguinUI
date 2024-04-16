@@ -2,7 +2,7 @@
   <div class="header-block-box">
     <div class="logoBox">
       <img src="../assets/logo.png" alt="penguin-ui" @click="toHome" />
-      <t-badge type="primary" value="V 0.1.0">
+      <t-badge type="primary" value="V 1.7.51">
         <a href="javascript:" @click="toHome">Penguin UI</a>
       </t-badge>
     </div>

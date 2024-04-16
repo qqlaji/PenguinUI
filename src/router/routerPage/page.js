@@ -8,6 +8,7 @@ export default [
         path: '/penguinui',
         name: '组件页面',
         component: () => import('@/views/home.vue'),
+        redirect: '/penguinui/install',
         children: [
             {
                 path: 'install',

@@ -5,9 +5,9 @@ import preview from '@/components/preview.vue'
 
 # Icon 图标
 
-#### 提供了 190 多个常用的 icon 图标
+#### 本 UI没有 icon 图标
 
-## 使用方法
+## 请自己添加
 
 #### 给元素设置类名 _m-icon-iconName_ 即可。
 
