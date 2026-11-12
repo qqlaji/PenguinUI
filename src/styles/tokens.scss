@@ -1,0 +1,118 @@
+// 文档站专用设计令牌（不进入组件库 dist，只作用于文档站自身 UI）
+// 组件库产物仅引入 styles/iconfont.css 与 styles/main.css
+:root,
+[data-theme='light'] {
+  --pui-bg: #ffffff;
+  --pui-bg-soft: #f7f9fc;
+  --pui-bg-elevated: #ffffff;
+  --pui-header-bg: rgba(255, 255, 255, 0.86);
+  --pui-text: #1c2534;
+  --pui-text-sub: #5b6879;
+  --pui-text-muted: #8b96a6;
+  --pui-border: #e7ecf3;
+  --pui-border-strong: #d8e0ea;
+  --pui-brand: #0e80eb;
+  --pui-brand-strong: #0a68c4;
+  --pui-brand-soft: rgba(14, 128, 235, 0.1);
+  --pui-brand-glow: rgba(14, 128, 235, 0.22);
+  --pui-shadow-sm: 0 2px 10px rgba(24, 44, 78, 0.06);
+  --pui-shadow: 0 12px 36px rgba(24, 44, 78, 0.1);
+  --pui-shadow-lg: 0 24px 60px rgba(24, 44, 78, 0.16);
+  --pui-code-bg: #f6f8fb;
+  --pui-demo-bg: #ffffff;
+  --pui-mask: rgba(18, 28, 45, 0.42);
+  --pui-grid-line: rgba(14, 128, 235, 0.07);
+  --pui-success: #09b63d;
+  --pui-warning: #f57b29;
+  --pui-danger: #ec3437;
+  // 分类色：8 个高区分度色相，仅用于文档站导航与分类编码
+  --pui-cat-start: #a85509;
+  --pui-cat-start-soft: rgba(168, 85, 9, 0.11);
+  --pui-cat-basic: #0b6fd6;
+  --pui-cat-basic-soft: rgba(11, 111, 214, 0.1);
+  --pui-cat-general: #6d3bd1;
+  --pui-cat-general-soft: rgba(109, 59, 209, 0.1);
+  --pui-cat-data: #087e8b;
+  --pui-cat-data-soft: rgba(8, 126, 139, 0.11);
+  --pui-cat-interaction: #c02a68;
+  --pui-cat-interaction-soft: rgba(192, 42, 104, 0.1);
+  --pui-cat-display: #087a52;
+  --pui-cat-display-soft: rgba(8, 122, 82, 0.11);
+  --pui-cat-feedback: #c85a12;
+  --pui-cat-feedback-soft: rgba(200, 90, 18, 0.11);
+  --pui-cat-other: #4d6178;
+  --pui-cat-other-soft: rgba(77, 97, 120, 0.11);
+  // 语法高亮（浅色：墨蓝底调）
+  --pui-hljs-text: #334155;
+  --pui-hljs-comment: #8b96a6;
+  --pui-hljs-keyword: #7c3aed;
+  --pui-hljs-string: #0a7d55;
+  --pui-hljs-number: #b45309;
+  --pui-hljs-attr: #c2410c;
+  --pui-hljs-title: #0e80eb;
+  --pui-hljs-builtin: #0369a1;
+  --pui-hljs-meta: #be185d;
+}
+
+[data-theme='dark'] {
+  --pui-bg: #0d1420;
+  --pui-bg-soft: #131c2b;
+  --pui-bg-elevated: #172233;
+  --pui-header-bg: rgba(13, 20, 32, 0.86);
+  --pui-text: #e9eff8;
+  --pui-text-sub: #a8b6c9;
+  --pui-text-muted: #708198;
+  --pui-border: #26344a;
+  --pui-border-strong: #34455f;
+  --pui-brand: #54a8ff;
+  --pui-brand-strong: #7dbcff;
+  --pui-brand-soft: rgba(84, 168, 255, 0.14);
+  --pui-brand-glow: rgba(84, 168, 255, 0.28);
+  --pui-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.32);
+  --pui-shadow: 0 12px 36px rgba(0, 0, 0, 0.42);
+  --pui-shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
+  --pui-code-bg: #111a28;
+  --pui-demo-bg: #162132;
+  --pui-mask: rgba(2, 7, 14, 0.66);
+  --pui-grid-line: rgba(120, 175, 255, 0.08);
+  --pui-success: #35c76a;
+  --pui-warning: #ff9a4d;
+  --pui-danger: #ff6b6e;
+  // 分类色：暗底上提亮，保持色相区分与文字对比度
+  --pui-cat-start: #f5b74b;
+  --pui-cat-start-soft: rgba(245, 183, 75, 0.14);
+  --pui-cat-basic: #63aaff;
+  --pui-cat-basic-soft: rgba(99, 170, 255, 0.15);
+  --pui-cat-general: #b99aff;
+  --pui-cat-general-soft: rgba(185, 154, 255, 0.15);
+  --pui-cat-data: #4ed4d4;
+  --pui-cat-data-soft: rgba(78, 212, 212, 0.14);
+  --pui-cat-interaction: #f48ab8;
+  --pui-cat-interaction-soft: rgba(244, 138, 184, 0.14);
+  --pui-cat-display: #5ad8a0;
+  --pui-cat-display-soft: rgba(90, 216, 160, 0.14);
+  --pui-cat-feedback: #ff9d5c;
+  --pui-cat-feedback-soft: rgba(255, 157, 92, 0.14);
+  --pui-cat-other: #9db2cc;
+  --pui-cat-other-soft: rgba(157, 178, 204, 0.14);
+  // 语法高亮（深色：柔和冷调，避免刺眼）
+  --pui-hljs-text: #d6e2f0;
+  --pui-hljs-comment: #6b7d94;
+  --pui-hljs-keyword: #c4a2ff;
+  --pui-hljs-string: #7ee2a8;
+  --pui-hljs-number: #f6c177;
+  --pui-hljs-attr: #ffab70;
+  --pui-hljs-title: #7dc4ff;
+  --pui-hljs-builtin: #67d5e8;
+  --pui-hljs-meta: #f5a3c7;
+}
+
+// 主题切换时给整站一个柔和过渡（不影响组件库内部动画）
+html[data-theme] body,
+html[data-theme] .pui-surface {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}

@@ -3,6 +3,9 @@ import demo1 from './demo1.vue'
 import demo2 from './demo2.vue'
 import demo3 from './demo3.vue'
 import demo4 from './demo4.vue'
+import demo5 from './demo5.vue'
+import demo6 from './demo6.vue'
+import demo7 from './demo7.vue'
 import Attributes from './Attributes.vue'
 import Fileds from './fileds.vue'
 import preview from '@/components/preview.vue'
@@ -50,10 +53,49 @@ import preview from '@/components/preview.vue'
 </div>
 <preview compname="table" demoname="demo4"/>
 
+## 行选择
+
+#### 开启 _selectable_ 后首列出现复选框，配合 _v-model:selectedKeys_ 与 _rowKeyField_ 管理选中态；_showToolbar_ 显示已选统计，_#toolbar-extra_ 放批量操作。
+
+<div class="componetnsBox">
+  <demo5/>
+</div>
+<preview compname="table" demoname="demo5"/>
+
+## 排序、筛选与分页
+
+#### 列上声明 _sortable_ 即可点击表头排序（升序 → 降序 → 取消），_filters_ 提供多选筛选；开启 _pagination_ 后内置分页条。
+
+<div class="componetnsBox">
+  <demo6/>
+</div>
+<preview compname="table" demoname="demo6"/>
+
+## 固定表头、斑马纹与加载态
+
+#### _fixedHeader_ 配合 _maxHeight_ 让表头吸顶，_striped_ 开启斑马纹，_loading_ 覆盖加载遮罩，_#empty_ 自定义空态。
+
+<div class="componetnsBox">
+  <demo7/>
+</div>
+<preview compname="table" demoname="demo7"/>
+
 ## Attributes 参数
 
 <Attributes/>
 <br/>
+
+## Events 事件
+
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| update:selectedKeys | 选中项变化 | keys: Array |
+| selection-change | 选中行变化 | rows: Array |
+| sort-change | 排序变化 | { field, order } |
+| filter-change | 筛选变化 | state: Record\<string, Array\> |
+| update:page | 页码变化 | page: number |
+| page-change | 页码变化 | page: number |
+| row-click | 行点击（需 clickableRow） | { row, index, event } |
 
 ## fileds API
 

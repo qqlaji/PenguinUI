@@ -7,6 +7,7 @@ import demo5 from './demo5.vue';
 import demo6 from './demo6.vue';
 import Attributes from './Attributes.vue';
 import preview from '@/components/preview.vue';
+import demo7 from './demo7.vue'
 </script>
 
 
@@ -79,4 +80,24 @@ import preview from '@/components/preview.vue';
 ## Attributes 参数
 
 <Attributes/>
+<br/>
+
+## v1.9 新增：块级 / 朴素 / 圆形 / 加载态
+
+#### `block` 占满一行，`plain` 使用语义色描边，`circle` 渲染圆形图标按钮，`loading` 自动补旋转图标并阻止重复点击。
+
+<br/>
+<div class="componetnsBox">
+  <demo7/>
+</div>
+<preview compname="button" demoname="demo7"/>
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| block | 块级按钮，宽度 100% | boolean | false |
+| plain | 朴素按钮，白底 + 语义色 | boolean | false |
+| circle | 圆形图标按钮 | boolean | false |
+| nativeType | 原生 button 的 type | string | 不设置 |
+| loading | 加载态（兼容旧别名 localing），自动显示旋转图标 | boolean | false |
+
 <br/>

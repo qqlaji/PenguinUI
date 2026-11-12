@@ -17,22 +17,64 @@ const state = reactive({
       {
         attr: 'v-model',
         type: 'string',
-        red: '绑定值',
+        red: '绑定值，支持 #rgb / #rrggbb / #rrggbbaa / rgb() / rgba()',
         sel: '——',
-        def: '——'
+        def: "''"
       },
       {
         attr: 'defaultColor',
         type: 'String',
-        red: '默认显示的颜色',
+        red: '默认颜色（未绑定值时展示，也是「默认颜色」按钮的取值）',
         sel: '——',
-        def: '——'
+        def: '#0e80eb'
+      },
+      {
+        attr: 'disabled',
+        type: 'Boolean',
+        red: '是否禁用',
+        sel: 'true / false',
+        def: 'false'
+      },
+      {
+        attr: 'size',
+        type: 'String',
+        red: '尺寸',
+        sel: 'default / small',
+        def: 'default'
+      },
+      {
+        attr: 'clearable',
+        type: 'Boolean',
+        red: '是否可清空（悬停显示 ×）',
+        sel: 'true / false',
+        def: 'true'
+      },
+      {
+        attr: 'showAlpha',
+        type: 'Boolean',
+        red: '是否显示透明度滑块，开启后输出 rgba()',
+        sel: 'true / false',
+        def: 'false'
+      },
+      {
+        attr: 'predefine',
+        type: 'Array',
+        red: '预设色板，传入颜色字符串数组',
+        sel: '——',
+        def: '12 个常用色'
+      },
+      {
+        attr: 'placement',
+        type: 'String',
+        red: '面板弹出位置',
+        sel: 'bottom-start / bottom / bottom-end',
+        def: 'bottom-start'
       },
       {
         attr: 'autoClose',
         type: 'Boolean',
-        red: '选择完颜色之后是否自动关闭颜色面板',
-        sel: '——',
+        red: '点选预设颜色后是否自动关闭面板',
+        sel: 'true / false',
         def: 'false'
       },
       {
@@ -40,7 +82,7 @@ const state = reactive({
         type: 'String',
         red: '自定义组件类名',
         sel: '——',
-        def: '——'
+        def: "''"
       }
     ]
   }

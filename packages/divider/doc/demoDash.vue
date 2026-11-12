@@ -1,11 +1,20 @@
 <template>
-    <div>
-        <span>I sit at my window this morning where the world like a passer-by stops for a moment, nods to me andgoes.</span>
-        <t-divider position="left" lineStyle="dotted"><i class="t-icon-collection_fill"></i></t-divider>
-        <span>There little thoughts are the rustle of leaves; they have their whisper of joy in my mind.</span>
-        <t-divider position="center" lineStyle="dashed"><i class="t-icon-collection_fill"></i></t-divider>
-        <span>There little thoughts are the rustle of leaves; they have their whisper of joy in my mind.</span>
-        <t-divider position="right" lineStyle="groove"><i class="t-icon-collection_fill"></i></t-divider>
-        <span>There little thoughts are the rustle of leaves; they have their whisper of joy in my mind.</span>
-    </div>
+  <div class="dv-demo">
+    <p class="dv-demo__note">lineStyle 支持任意 CSS border-style</p>
+    <t-divider position="left" line-style="dotted">dotted</t-divider>
+    <t-divider position="center" line-style="dashed">dashed</t-divider>
+    <t-divider position="right" line-style="double">double</t-divider>
+    <t-divider position="center" line-style="groove" color="#0e80eb">自定义颜色</t-divider>
+  </div>
 </template>
+
+<style scoped>
+.dv-demo {
+  font-family: var(--pui-font-body, sans-serif);
+}
+.dv-demo__note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--pui-text-muted, #8b96a6);
+}
+</style>

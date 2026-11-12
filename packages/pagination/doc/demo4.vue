@@ -1,9 +1,9 @@
 <!-- html -->
 <template>
   <t-pagination
-    :total="100"
+    :total="500"
     :current="1"
     :pageSize="10"
-    :border="false"
+    border
   ></t-pagination>
 </template>

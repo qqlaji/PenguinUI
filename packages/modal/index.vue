@@ -149,4 +149,26 @@ const closeModal = (e) =>{
     }
   }
 }
+
+/* ===== v1.11 视觉统一：圆角 / 阴影 / 遮罩 / 居中 ===== */
+.penguin-modal-default {
+  background: rgba(20, 28, 44, 0.45);
+  backdrop-filter: blur(2px);
+}
+.penguin-modal-default .penguin-modal-contentbox {
+  width: min(520px, calc(100vw - 32px));
+  top: 50%;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(24, 44, 78, 0.22);
+  overflow: hidden;
+}
+.penguin-modal-default .penguin-modal-header { border-bottom-color: var(--pui-border, #e7ecf3); }
+.penguin-modal-default .penguin-modal-title { color: var(--pui-text, #1c2534); font-weight: 650; }
+.penguin-modal-default .penguin-modal-footer { border-top-color: var(--pui-border, #e7ecf3); }
+.penguin-modal-default i.penguin-modal-close {
+  color: var(--pui-text-muted, #8b96a6);
+  transition: color 0.15s ease;
+
+  &:hover { color: var(--pui-text, #1c2534); }
+}
 </style>

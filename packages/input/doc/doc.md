@@ -10,6 +10,7 @@ import demo8 from './demo8.vue'
 import Attributes from './Attributes.vue'
 import Event from './Events.vue'
 import preview from '@/components/preview.vue'
+import demo9 from './demo9.vue'
 </script>
 
 # Input 输入框
@@ -98,4 +99,28 @@ import preview from '@/components/preview.vue'
 ## Event 事件
 
 <Event/>
+<br/>
+
+## v1.9 新增：前后缀 / 字数统计 / 校验状态
+
+#### 通过 `prefix` / `suffix` 插槽添加组合内容，`showWordLimit` 显示字数，`status` 切换校验边框色。
+
+<br/>
+<div class="componetnsBox">
+  <demo9/>
+</div>
+<preview compname="input" demoname="demo9"/>
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| prefixIcon / suffixIcon | leftIcon / rightIcon 的语义化别名 | string | '' |
+| maxlength | 最大输入长度 | number / string | — |
+| showWordLimit | 显示字数统计 | boolean | false |
+| status | error / success / warning | string | '' |
+
+| 插槽 | 说明 |
+| --- | --- |
+| prefix | 输入框左侧附加内容 |
+| suffix | 输入框右侧附加内容 |
+
 <br/>

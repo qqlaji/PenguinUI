@@ -1,156 +1,80 @@
 ---
 title: Color 颜色
 ---
+<script setup>
+import demo from './demo.vue';
+import preview from '@/components/preview.vue';
+</script>
 
 # Color 颜色
+#### penguin-ui 的色彩体系：品牌色、语义色、文本色、边框色与阴影色。
 
-#### penguin-ui 主要颜色搭配
+<br />
 
-## 主要颜色
+## 调色板
 
-<div class="color-itembox">
-  <li style="background:#0e80eb">
-    <span class="title">主要颜色</span>
-    <span class="color">#0e80eb</span>
-    <span>rgba(14,128,235,1)</span>
-  </li>
-  <span class="outherColor" style="background:rgba(14,128,235,.9)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.8)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.7)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.6)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.5)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.4)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.3)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.2)"></span>
-  <span class="outherColor" style="background:rgba(14,128,235,.1)"></span>
+#### 所有色值都可以在下方点击复制。组件库默认使用明亮主题，文档站的暗色主题通过设计令牌覆盖表面色。
+
+<div class="componetnsBox">
+  <demo/>
 </div>
+<preview compname="color" demoname="demo"/>
 
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<br />
 
+## 语义色速查
 
-## 成功状态
+| 用途 | 色值 | 说明 |
+| --- | --- | --- |
+| 主色 Primary | `#0e80eb` | 主按钮、链接、聚焦环、选中态 |
+| 成功 Success | `#09b63d` | 成功提示、正向状态 |
+| 警告 Warning | `#f57b29` | 警告提示、待处理状态 |
+| 危险 Danger | `#ec3437` | 错误提示、删除操作 |
+| 主文本 | `#1c2534` | 标题与正文 |
+| 次文本 | `#5b6879` | 说明文字、表格内容 |
+| 弱文本 | `#8b96a6` | 占位符、辅助信息 |
+| 常规边框 | `#f0f0f0` | 分割线、卡片描边 |
+| 控件边框 | `#dcdfe6` | 输入框、选择器 |
 
-<div class="color-itembox">
-  <li style="background:#09b63d">
-    <span class="title">成功状态</span>
-    <span class="color">#09b63d</span>
-    <span>rgba(9,182,61,1)</span>
-  </li>
-  <span class="outherColor" style="background:rgba(9,182,61,.9)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.8)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.7)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.6)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.5)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.4)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.3)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.2)"></span>
-  <span class="outherColor" style="background:rgba(9,182,61,.1)"></span>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-## 危险状态
-
-<div class="color-itembox">
-  <li style="background:#ec3437">
-    <span class="title">危险状态</span>
-    <span class="color">#ec3437</span>
-    <span>rgba(236,52,55,1)</span>
-  </li>
-  <span class="outherColor" style="background:rgba(236,52,55,.9)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.8)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.7)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.6)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.5)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.4)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.3)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.2)"></span>
-  <span class="outherColor" style="background:rgba(236,52,55,.1)"></span>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-## 警告状态
-
-<div class="color-itembox">
-  <li style="background:#f57b29">
-    <span class="title">警告状态</span>
-    <span class="color">#f57b29</span>
-    <span>rgba(245,123,41,1)</span>
-  </li>
-  <span class="outherColor" style="background:rgba(245,123,41,.9)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.8)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.7)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.6)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.5)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.4)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.3)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.2)"></span>
-  <span class="outherColor" style="background:rgba(245,123,41,.1)"></span>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-## 文本颜色
-
-<div class="color-itembox">
-  <li style="background:#505050">
-    <span class="title">文本颜色</span>
-    <span class="color">#505050</span>
-    <span>rgba(80,80,80,1)</span>
-  </li>
-  <span class="outherColor" style="background:rgba(80,80,80,.9)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.8)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.7)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.6)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.5)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.4)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.3)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.2)"></span>
-  <span class="outherColor" style="background:rgba(80,80,80,.1)"></span>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<br />
 
 ## 边框颜色
 
-<div class="color-itembox">
-  <li style="border:1px solid #f0f0f0;color:#333">
-    <span class="title">边框颜色</span>
-    <span class="color">#f0f0f0</span>
-    <span>rgba(240,240,240,1)</span>
-  </li>
-</div>
-<br/>
-<br/>
+#### 边框统一使用 1px 发丝线。下面是四个层级，点击示例卡可复制对应写法：
+
+| 名称 | 色值 / 写法 |
+| --- | --- |
+| 常规边框 | `1px solid #f0f0f0` |
+| 输入控件边框 | `1px solid #dcdfe6` |
+| 强调边框 | `1px solid #0e80eb` |
+| 主题边框（推荐） | `1px solid var(--pui-border)` |
+
+<br />
 
 ## 阴影颜色
 
-<div class="color-itembox">
-  <li style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);;color:#333">
-    <span class="title">阴影颜色</span>
-    <span class="color">0 2px 12px 0 rgba(0, 0, 0, 0.1)</span>
-  </li>
-</div>
-<div style="margin-bottom:50px"></div>
+#### 三级高度体系，阴影带环境色而不是纯黑，层叠时更自然：
+
+| 层级 | 写法 |
+| --- | --- |
+| 一级 · 悬浮 | `0 2px 8px rgba(24,44,78,.08)` |
+| 二级 · 弹层 | `0 12px 36px rgba(24,44,78,.14)` |
+| 三级 · 抽屉 | `0 24px 64px rgba(24,44,78,.20)` |
+| 经典写法 | `0 2px 12px 0 rgba(0,0,0,.1)` |
+
+<br />
+
+## 在暗色主题中使用
+
+#### 文档站通过 `[data-theme='dark']` 覆盖语义令牌，组件代码无需改动。推荐在自定义样式里优先引用变量：
+
+```css
+.my-card {
+  background: var(--pui-bg-elevated);
+  border: 1px solid var(--pui-border);
+  box-shadow: var(--pui-shadow);
+  color: var(--pui-text);
+}
+```
+
+<br />

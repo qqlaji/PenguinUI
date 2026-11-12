@@ -6,6 +6,7 @@ import demo4 from './demo4.vue'
 import demo5 from './demo5.vue'
 import demo6 from './demo6.vue'
 import demo7 from './demo7.vue'
+import demo8 from './demo8.vue'
 import Attributes from './Attributes.vue'
 import Event from './Events.vue'
 import ActiveColors from './activeColors.vue'
@@ -14,13 +15,13 @@ import preview from '@/components/preview.vue'
 
 # Pagination 分页
 
-#### 用于页面数据请求过多分批请求
+#### 长列表分批加载时的页码导航，页数过多时自动折叠为省略号，悬停省略号可快速跨页。
 
 <br/>
 
 ## 基本使用
 
-#### Pagination 组件基本使用示例。
+#### 页数超出 `pagerCount` 时自动折叠为省略号，当前页以主题色高亮。
 
 <div class="componetnsBox">
   <demo1/>
@@ -45,18 +46,18 @@ import preview from '@/components/preview.vue'
 </div>
 <preview compname="pagination" demoname="demo3"/>
 
-## 无边框
+## 带边框
 
-#### 通过 _border=false_ 属性来开启。
+#### 默认是无边框的文字页码；加上 `border` 切换为带边框的按钮形态。
 
 <div class="componetnsBox">
   <demo4/>
 </div>
 <preview compname="pagination" demoname="demo4"/>
 
-## 每页展示最大页数
+## 页码折叠数量
 
-#### 通过 _maxSize_ 控制每页展示最大页数，超出将进行滚动。
+#### 通过 _pagerCount_ 控制同时展示的页码数量，取值需为 5~21 的奇数。
 
 <div class="componetnsBox">
   <demo5/>
@@ -65,7 +66,7 @@ import preview from '@/components/preview.vue'
 
 ## 更多配置
 
-#### 更多额外拓展配置项。
+#### `showTotal` 显示总条数，`jumper` 显示跳页输入，`prevText` / `nextText` 自定义上下页文案。
 
 <div class="componetnsBox">
   <demo6/>
@@ -74,12 +75,21 @@ import preview from '@/components/preview.vue'
 
 ## 自定义样式
 
-#### 可通过 _activeColors_ 对象自定义分页样式。
+#### 可通过 _activeColors_ 对象自定义分页配色（需配合 `border` 生效）。
 
 <div class="componetnsBox">
   <demo7/>
 </div>
 <preview compname="pagination" demoname="demo7"/>
+
+## 受控用法
+
+#### 使用 `v-model:current` 或 `@update:current` 接管页码，`@change` 触发数据请求。
+
+<div class="componetnsBox">
+  <demo8/>
+</div>
+<preview compname="pagination" demoname="demo8"/>
 
 ## attributes 参数
 

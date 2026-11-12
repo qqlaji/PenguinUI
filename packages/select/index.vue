@@ -101,31 +101,53 @@ const props = defineProps({
   },
   multiple: Boolean,
 });
-props.options.forEach((item, index) => {
-  if (!props.multiple) {
-    item.selected = false;
-  } else {
-    props.modelValue.forEach((item1, index1) => {
-      if (item[props.valueFiled] == item1) {
-        item.selected = true;
-      }
-    });
-    console.log();
-  }
-});
+/** 取选项的原始值（兼容字符串/数字数组） */
+const rawValue = (item) => (item !== null && typeof item === 'object' ? item[props.valueFiled] : item);
+
+/** 取选项的展示文本 */
+const rawLabel = (item) => (item !== null && typeof item === 'object' ? item[props.labelFiled] : String(item));
+
+/**
+ * 选项规范化：允许传入字符串 / 数字数组（如 ['选项一', '选项二']），
+ * 统一转成 { label, value, selected } 结构，避免对原始值写 selected 属性报错
+ */
+const normalizedOptions = computed(() =>
+  (props.options || []).map((item) => {
+    const base = item !== null && typeof item === 'object' ? { ...item } : { disabled: false };
+    return {
+      ...base,
+      label: rawLabel(item),
+      value: rawValue(item)
+    };
+  })
+);
 
 const activeIndex = ref(-1);
 const isShow = ref(false);
 const rotate = ref("rotate(0deg)");
-const optionsData = ref(props.options || []);
+
+const optionsData = ref(
+  normalizedOptions.value.map((item) => ({
+    ...item,
+    selected: props.multiple
+      ? (Array.isArray(props.modelValue) ? props.modelValue : []).some((v) => v == item.value)
+      : false
+  }))
+);
+
+// 单选时展示已选项的 label；多选时展示数组本身
+const matched = computed(() =>
+  (props.options || []).find((item) => rawValue(item) == props.modelValue)
+);
+
 const selVal = ref(
   props.multiple
     ? props.modelValue
-    : props.modelValue != ""
-    ? props.options.filter((item) => {
-        return item[props.valueFiled] == props.modelValue;
-      })[0][props.labelFiled]
-    : ""
+    : props.modelValue != ''
+    ? matched.value !== undefined
+      ? rawLabel(matched.value)
+      : ''
+    : ''
 );
 /*1.增加选择框width和height属性的大小限制 高度最小是25px,width属性最小是100px
  *2.动态计算下拉图标的行高
@@ -172,13 +194,10 @@ const blur = (e) => {
 
 const input = (e) => {
   selVal.value = e.target.value;
-  optionsData.value = [];
-  let filterList = props.options.filter((item) => {
-    return item[props.labelFiled].indexOf(e.target.value) != -1;
-  });
-  filterList.forEach((item, index) => {
-    optionsData.value.push(item);
-  });
+  const kw = String(e.target.value || "").toLowerCase();
+  optionsData.value = normalizedOptions.value
+    .filter((item) => String(item.label).toLowerCase().includes(kw))
+    .map((item) => ({ ...item }));
 };
 const vClickOutside = {
   beforeMount(el) {
@@ -835,5 +854,110 @@ input::-ms-input-placeholder {
 .slide-fade-leave-to {
   transform: translateY(-20px);
   opacity: 0;
+}
+
+// ============================================================
+// 下拉面板视觉升级（统一覆盖 default / small / mini 三套尺寸）
+// 设计：无三角箭头、10px 圆角、分层阴影、选中态高亮、暗色主题跟随
+// ============================================================
+.penguin-select-input-box,
+.penguin-select-default,
+.penguin-select-small,
+.penguin-select-mini {
+  input {
+    border: 1px solid var(--pui-border-strong, #dcdfe6) !important;
+    border-radius: 8px !important;
+    background: var(--pui-bg-elevated, #fff) !important;
+    color: var(--pui-text, #303133) !important;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    &::placeholder { color: var(--pui-text-muted, #a8abb2) !important; }
+    &:focus {
+      border-color: var(--pui-brand, #0e80eb) !important;
+      box-shadow: 0 0 0 3px var(--pui-brand-soft, rgba(14, 128, 235, 0.12)) !important;
+    }
+  }
+  .select-icon { color: var(--pui-text-muted, #94969b) !important; }
+
+  .penguin-select-option {
+    top: calc(100% + 8px) !important;
+    bottom: auto !important;
+    min-width: 100%;
+    // 旧样式给外层写了纯白底，暗色主题下会在面板边缘露出一条白边
+    background: transparent !important;
+    border-radius: 10px;
+
+    .penguin-select-option-find {
+      margin-top: 0 !important;
+      padding: 6px !important;
+      border: 1px solid var(--pui-border, #e3e9f2) !important;
+      border-radius: 10px !important;
+      background: var(--pui-bg-elevated, #fff) !important;
+      box-shadow: 0 14px 36px rgba(24, 44, 78, 0.16) !important;
+      &::before,
+      &::after { display: none !important; }
+
+      ul {
+        max-height: 240px !important;
+        overflow-y: auto;
+        scrollbar-width: thin;
+
+        li.penguin-select-option-li {
+          margin: 2px 0;
+          padding: 9px 12px !important;
+          line-height: 1.5 !important;
+          border-radius: 6px;
+          color: var(--pui-text-sub, #5b6879) !important;
+          transition: background 0.16s ease, color 0.16s ease;
+          i { float: right; color: var(--pui-brand, #0e80eb); }
+          &:hover {
+            background: var(--pui-brand-soft, rgba(14, 128, 235, 0.08)) !important;
+            color: var(--pui-brand, #0e80eb) !important;
+          }
+          &.penguin-select-active {
+            background: var(--pui-brand-soft, rgba(14, 128, 235, 0.12)) !important;
+            color: var(--pui-brand, #0e80eb) !important;
+            font-weight: 600;
+          }
+          &.penguin-select-disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            &:hover {
+              background: transparent !important;
+              color: var(--pui-text-muted, #9d9d9d) !important;
+            }
+          }
+        }
+      }
+      ul::-webkit-scrollbar-thumb { background: var(--pui-border-strong, #d5d5d6); }
+      ul::-webkit-scrollbar-track { background: transparent; }
+    }
+  }
+}
+
+/* ===== v1.11 视觉统一：触发器圆角 / 聚焦环 / 下拉面板 ===== */
+[class*='penguin-select-input-'] input {
+  border-radius: 10px;
+  border-color: var(--pui-border-strong, #d8e0ea);
+  padding-left: 12px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover { border-color: var(--pui-brand, #0e80eb); }
+  &:focus {
+    border-color: var(--pui-brand, #0e80eb);
+    box-shadow: 0 0 0 3px var(--pui-brand-soft, rgba(14, 128, 235, 0.12));
+  }
+}
+.penguin-select-option-find {
+  margin-top: 6px !important;
+  padding: 6px !important;
+  border-radius: 12px !important;
+  border-color: var(--pui-border, #e7ecf3) !important;
+  box-shadow: 0 16px 40px rgba(24, 44, 78, 0.14) !important;
+
+  &::before,
+  &::after { display: none !important; }
+
+  ul li { border-radius: 8px; }
+  ul li.penguin-select-active { background: var(--pui-brand-soft, rgba(14, 128, 235, 0.12)); }
 }
 </style>

@@ -56,6 +56,16 @@ export default [
                 component: () => import('/packages/select/doc/doc.md')
             },
             {
+                path: 'treeSelect',
+                name: 'TreeSelect 树选择',
+                component: () => import('/packages/treeSelect/doc/doc.md')
+            },
+            {
+                path: 'transfer',
+                name: 'Transfer 穿梭框',
+                component: () => import('/packages/transfer/doc/doc.md')
+            },
+            {
                 path: 'dropDown',
                 name: 'Dropdown 下拉菜单',
                 component: () => import('/packages/dropDown/doc/doc.md')
@@ -99,6 +109,11 @@ export default [
                 path: 'date',
                 name: 'Datepicker 日期组件',
                 component: () => import('/packages/date/doc/doc.md')
+            },
+            {
+                path: 'datePicker',
+                name: 'DatePicker 日期选择器',
+                component: () => import('/packages/datePicker/doc/doc.md')
             },
             {
                 path: 'tree',
@@ -169,6 +184,251 @@ export default [
                 path: 'divider',
                 name: 'divider 分割线',
                 component: () => import('/packages/divider/doc/doc.md')
+            },
+            {
+                path: 'alert',
+                name: 'Alert 警告提示',
+                component: () => import('/packages/alert/doc/doc.md')
+            },
+            {
+                path: 'tag',
+                name: 'Tag 标签',
+                component: () => import('/packages/tag/doc/doc.md')
+            },
+            {
+                path: 'avatar',
+                name: 'Avatar 头像',
+                component: () => import('/packages/avatar/doc/doc.md')
+            },
+            {
+                path: 'card',
+                name: 'Card 卡片',
+                component: () => import('/packages/card/doc/doc.md')
+            },
+            {
+                path: 'collapse',
+                name: 'Collapse 折叠面板',
+                component: () => import('/packages/collapse/doc/doc.md')
+            },
+            {
+                path: 'skeleton',
+                name: 'Skeleton 骨架屏',
+                component: () => import('/packages/skeleton/doc/doc.md')
+            },
+            {
+                path: 'empty',
+                name: 'Empty 空状态',
+                component: () => import('/packages/empty/doc/doc.md')
+            },
+            {
+                path: 'tooltip',
+                name: 'Tooltip 文字提示',
+                component: () => import('/packages/tooltip/doc/doc.md')
+            },
+            {
+                path: 'rate',
+                name: 'Rate 评分',
+                component: () => import('/packages/rate/doc/doc.md')
+            },
+            {
+                path: 'inputNumber',
+                name: 'InputNumber 数字框',
+                component: () => import('/packages/inputNumber/doc/doc.md')
+            },
+            {
+                path: 'slider',
+                name: 'Slider 滑块',
+                component: () => import('/packages/slider/doc/doc.md')
+            },
+            {
+                path: 'steps',
+                name: 'Steps 步骤条',
+                component: () => import('/packages/steps/doc/doc.md')
+            },
+            {
+                path: 'timeline',
+                name: 'Timeline 时间轴',
+                component: () => import('/packages/timeline/doc/doc.md')
+            },
+            {
+                path: 'popconfirm',
+                name: 'Popconfirm 气泡确认',
+                component: () => import('/packages/popconfirm/doc/doc.md')
+            },
+            {
+                path: 'notification',
+                name: 'Notification 通知',
+                component: () => import('/packages/notification/doc/doc.md')
+            },
+            {
+                path: 'form',
+                name: 'Form 表单',
+                component: () => import('/packages/form/doc/doc.md')
+            },
+            {
+                path: 'timePicker',
+                name: 'TimePicker 时间选择',
+                component: () => import('/packages/timePicker/doc/doc.md')
+            },
+            {
+                path: 'cascader',
+                name: 'Cascader 级联选择',
+                component: () => import('/packages/cascader/doc/doc.md')
+            },
+            {
+                path: 'carousel',
+                name: 'Carousel 走马灯',
+                component: () => import('/packages/carousel/doc/doc.md')
+            },
+            {
+                path: 'upload',
+                name: 'Upload 上传',
+                component: () => import('/packages/upload/doc/doc.md')
+            },
+            {
+                path: 'result',
+                name: 'Result 结果页',
+                component: () => import('/packages/result/doc/doc.md')
+            },
+            {
+                path: 'statistic',
+                name: 'Statistic 统计数值',
+                component: () => import('/packages/statistic/doc/doc.md')
+            },
+            {
+                path: 'affix',
+                name: 'Affix 固钉',
+                component: () => import('/packages/affix/doc/doc.md')
+            },
+            {
+                path: 'anchor',
+                name: 'Anchor 锚点',
+                component: () => import('/packages/anchor/doc/doc.md')
+            },
+            {
+                path: 'calendar',
+                name: 'Calendar 日历',
+                component: () => import('/packages/calendar/doc/doc.md')
+            },
+            {
+                path: 'descriptions',
+                name: 'Descriptions 描述列表',
+                component: () => import('/packages/descriptions/doc/doc.md')
+            },
+            {
+                path: 'image',
+                name: 'Image 图片',
+                component: () => import('/packages/image/doc/doc.md')
+            },
+            {
+                path: 'segmented',
+                name: 'Segmented 分段控制器',
+                component: () => import('/packages/segmented/doc/doc.md')
+            },
+            {
+                path: 'inputOtp',
+                name: 'InputOTP 验证码',
+                component: () => import('/packages/inputOtp/doc/doc.md')
+            },
+            {
+                path: 'flex',
+                name: 'Flex 弹性布局',
+                component: () => import('/packages/flex/doc/doc.md')
+            },
+            {
+                path: 'splitter',
+                name: 'Splitter 分隔面板',
+                component: () => import('/packages/splitter/doc/doc.md')
+            },
+            {
+                path: 'list',
+                name: 'List 列表',
+                component: () => import('/packages/list/doc/doc.md')
+            },
+            {
+                path: 'watermark',
+                name: 'Watermark 水印',
+                component: () => import('/packages/watermark/doc/doc.md')
+            },
+            {
+                path: 'typography',
+                name: 'Typography 排版',
+                component: () => import('/packages/typography/doc/doc.md')
+            },
+            {
+                path: 'scrollbar',
+                name: 'Scrollbar 滚动条',
+                component: () => import('/packages/scrollbar/doc/doc.md')
+            },
+            {
+                path: 'autoComplete',
+                name: 'AutoComplete 自动补全',
+                component: () => import('/packages/autoComplete/doc/doc.md')
+            },
+            {
+                path: 'mentions',
+                name: 'Mentions 提及',
+                component: () => import('/packages/mentions/doc/doc.md')
+            },
+            {
+                path: 'floatButton',
+                name: 'FloatButton 悬浮按钮',
+                component: () => import('/packages/floatButton/doc/doc.md')
+            },
+            {
+                path: 'tour',
+                name: 'Tour 漫游式引导',
+                component: () => import('/packages/tour/doc/doc.md')
+            },
+            {
+                path: 'qrcode',
+                name: 'QRCode 二维码',
+                component: () => import('/packages/qrcode/doc/doc.md')
+            },
+            {
+                path: 'comment',
+                name: 'Comment 评论',
+                component: () => import('/packages/comment/doc/doc.md')
+            },
+            {
+                path: 'countdown',
+                name: 'Countdown 倒计时',
+                component: () => import('/packages/countdown/doc/doc.md')
+            },
+            {
+                path: 'pageHeader',
+                name: 'PageHeader 页头',
+                component: () => import('/packages/pageHeader/doc/doc.md')
+            },
+            {
+                path: 'configProvider',
+                name: 'ConfigProvider 全局配置',
+                component: () => import('/packages/configProvider/doc/doc.md')
+            },
+            {
+                path: 'virtualList',
+                name: 'VirtualList 虚拟列表',
+                component: () => import('/packages/virtualList/doc/doc.md')
+            },
+            {
+                path: 'bubble',
+                name: 'Bubble 气泡',
+                component: () => import('/packages/bubble/doc/doc.md')
+            },
+            {
+                path: 'signature',
+                name: 'Signature 手写签名',
+                component: () => import('/packages/signature/doc/doc.md')
+            },
+            {
+                path: 'imageViewer',
+                name: 'ImageViewer 图片查看器',
+                component: () => import('/packages/imageViewer/doc/doc.md')
+            },
+            {
+                path: 'codeBlock',
+                name: 'CodeBlock 代码块',
+                component: () => import('/packages/codeBlock/doc/doc.md')
             }
         ]
     }

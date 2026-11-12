@@ -5,6 +5,7 @@ import demo3 from './demo3.vue'
 import demo4 from './demo4.vue'
 import Attributes from './Attributes.vue'
 import preview from '@/components/preview.vue'
+import demo5 from './demo5.vue'
 </script>
 
 # Message 消息提示
@@ -50,4 +51,27 @@ import preview from '@/components/preview.vue'
 ## Attributes 参数
 
 <Attributes/>
+<br/>
+
+## v1.9 新增：自定义时长 / 手动关闭 / 消息堆叠
+
+#### `duration` 是 `timeout` 的别名；`closable` 显示关闭按钮；多条消息会自动依次下移，也可用 `offset` 指定位置。调用 `Message()` 会返回销毁函数。
+
+<br/>
+<div class="componetnsBox">
+  <demo5/>
+</div>
+<preview compname="message" demoname="demo5"/>
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| duration | 显示时长（ms），等价于 timeout | number | 2500 |
+| closable | 是否显示关闭按钮 | boolean | false |
+| offset | 距顶部的像素值，默认自动堆叠 | number | 自动 |
+
+```js
+const destroy = Message({ text: '保存成功', type: 'success', closable: true })
+// destroy() 可提前关闭这条消息
+```
+
 <br/>

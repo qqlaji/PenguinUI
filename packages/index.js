@@ -40,6 +40,57 @@ import tBreadcrumb from './breadcrumb/index';
 import tBadge from './badge/index';
 import tDivider from './divider/index';
 import tIcon from './icon/index';
+import tAlert from './alert/index';
+import tTag from './tag/index';
+import tAvatar from './avatar/index';
+import tCard from './card/index';
+import tSkeleton from './skeleton/index';
+import tEmpty from './empty/index';
+import tTooltip from './tooltip/index';
+import tRate from './rate/index'
+import tInputNumber from './inputNumber/index'
+import tSlider from './slider/index'
+import tSteps, { tStep } from './steps/index'
+import tTimeline, { tTimelineItem } from './timeline/index'
+import tPopconfirm from './popconfirm/index'
+import Notification from './notification/index'
+import tForm, { tFormItem } from './form/index'
+import tTimePicker from './timePicker/index'
+import tCascader from './cascader/index'
+import tCarousel, { tCarouselItem } from './carousel/index';
+import tUpload from './upload/index';
+import tResult from './result/index';
+import tStatistic from './statistic/index';
+import tAffix from './affix/index';
+import tDatePicker from './datePicker/index';
+import tTreeSelect from './treeSelect/index';
+import tTransfer from './transfer/index';
+import tAnchor from './anchor/index';
+import tDescriptions, { tDescriptionsItem } from './descriptions/index';
+import tCalendar from './calendar/index';
+import tImage from './image/index';
+import tSegmented from './segmented/index';
+import tWatermark from './watermark/index';
+import tFlex from './flex/index';
+import tSplitter from './splitter/index';
+import tList from './list/index';
+import tInputOTP from './inputOtp/index';
+import tTypography from './typography/index';
+import tScrollbar from './scrollbar/index';
+import tAutoComplete from './autoComplete/index';
+import tMentions from './mentions/index';
+import tFloatButton from './floatButton/index';
+import tTour from './tour/index';
+import tQrcode from './qrcode/index';
+import tComment from './comment/index';
+import tCountdown from './countdown/index';
+import tPageHeader from './pageHeader/index';
+import tConfigProvider from './configProvider/index';
+import tVirtualList from './virtualList/index';
+import tBubble from './bubble/index';
+import tSignature from './signature/index';
+import tImageViewer from './imageViewer/index';
+import tCodeBlock from './codeBlock/index';
 //存在所有组件
 const components = [
   tButton,
@@ -71,7 +122,62 @@ const components = [
   tBreadcrumb,
   tBadge,
   tDivider,
-  tIcon
+  tIcon,
+  tAlert,
+  tTag,
+  tAvatar,
+  tCard,
+  tSkeleton,
+  tEmpty,
+  tTooltip,
+  tRate,
+  tInputNumber,
+  tSlider,
+  tSteps,
+  tStep,
+  tTimeline,
+  tTimelineItem,
+  tPopconfirm,
+  tForm,
+  tFormItem,
+  tTimePicker,
+  tCascader,
+  tCarousel,
+  tCarouselItem,
+  tUpload,
+  tResult,
+  tStatistic,
+  tAffix,
+  tDatePicker,
+  tTreeSelect,
+  tTransfer,
+  tAnchor,
+  tDescriptions,
+  tDescriptionsItem,
+  tCalendar,
+  tImage,
+  tSegmented,
+  tWatermark,
+  tFlex,
+  tSplitter,
+  tList,
+  tInputOTP,
+  tTypography,
+  tScrollbar,
+  tAutoComplete,
+  tMentions,
+  tFloatButton,
+  tTour,
+  tQrcode,
+  tComment,
+  tCountdown,
+  tPageHeader,
+  tConfigProvider,
+  tVirtualList,
+  tBubble,
+  tSignature,
+  tImageViewer,
+  tCodeBlock
 ];
 const install = (app) => {
   components.forEach((i) => {
@@ -81,6 +187,7 @@ const install = (app) => {
   app.config.globalProperties.$Confirm = Confirm
   app.config.globalProperties.$Loading = Loading
   app.config.globalProperties.$penguin = $penguin
+  app.config.globalProperties.$notification = Notification
 }
 const penguinUi = {
   version: PKG_VERSION,
@@ -127,6 +234,62 @@ export {
   tBreadcrumb,
   tBadge,
   tDivider,
-  tIcon
+  tIcon,
+  tAlert,
+  tTag,
+  tAvatar,
+  tCard,
+  tSkeleton,
+  tEmpty,
+  tTooltip,
+  tRate,
+  tInputNumber,
+  tSlider,
+  tSteps,
+  tStep,
+  tTimeline,
+  tTimelineItem,
+  tPopconfirm,
+  tForm,
+  tFormItem,
+  tTimePicker,
+  tCascader,
+  tCarousel,
+  tCarouselItem,
+  tUpload,
+  tResult,
+  tStatistic,
+  tAffix,
+  tDatePicker,
+  tTreeSelect,
+  tTransfer,
+  tAnchor,
+  tDescriptions,
+  tDescriptionsItem,
+  tCalendar,
+  tImage,
+  tSegmented,
+  tWatermark,
+  tFlex,
+  tSplitter,
+  tList,
+  tInputOTP,
+  tTypography,
+  tScrollbar,
+  tAutoComplete,
+  tMentions,
+  tFloatButton,
+  tTour,
+  tQrcode,
+  tComment,
+  tCountdown,
+  tPageHeader,
+  tConfigProvider,
+  tVirtualList,
+  tBubble,
+  tSignature,
+  tImageViewer,
+  tCodeBlock,
+  Notification
 }
 export default penguinUi

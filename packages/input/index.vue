@@ -1,14 +1,17 @@
 <template>
-  <div :class="[`penguin-group-input-${size}`]" :style="{'min-width':'auto'}">
-    <div :class="isClass" :style="isStyle" style="">
-      <i :class="['left-icon','iconfont',leftIcon]" v-if="!showPassword&&leftIcon!==''"></i>
-      <input :type="inptype" @focus="focus" @blur="blur" :value="modelValue"  @input="iptChange" :disabled="disabled" @change="change" :placeholder="placeholder" :autofocus="autofocus" :readonly="readonly" :form="form"/>
+  <div :class="[`penguin-group-input-${size}`, statusClass]" :style="groupStyle">
+    <span v-if="$slots.prefix" class="penguin-input-affix"><slot name="prefix" /></span>
+    <div :class="isClass" :style="[isStyle, innerStyle]">
+      <i :class="['left-icon','iconfont',resolvedLeftIcon]" v-if="!showPassword&&resolvedLeftIcon!==''"></i>
+      <input :type="inptype" @focus="focus" @blur="blur" :value="modelValue"  @input="iptChange" :disabled="disabled" @change="change" :placeholder="placeholder" :autofocus="autofocus" :readonly="readonly" :form="form" :maxlength="maxlength || undefined"/>
        <transition name="slide-fade">
         <i class="clearable-icon iconfont t-icon-close" v-if="!showPassword&&clearable&&modelValue!==''" @click="clear"></i>
       </transition>
-      <i :class="['right-icon','iconfont',rightIcon]" v-if="!showPassword&&rightIcon!==''"></i>
+      <i :class="['right-icon','iconfont',resolvedRightIcon]" v-if="!showPassword&&resolvedRightIcon!==''"></i>
       <i v-if="showPassword"  :class="['password-icon','iconfont t-icon-browse']" @click="showPwd(type)"></i>
     </div>
+    <span v-if="$slots.suffix" class="penguin-input-affix"><slot name="suffix" /></span>
+    <span v-if="showWordLimit" class="penguin-input-limit">{{ valueLength }} / {{ maxlength || '∞' }}</span>
     <slot name="btn"/>
   </div>
 </template>
@@ -46,15 +49,34 @@ const props = defineProps({
     default:'#0e80eb'
   },
   readonly:Boolean,
-  form:String
+  form:String,
+  // ===== v1.9 新增 =====
+  // 与 leftIcon / rightIcon 等价的语义化别名
+  prefixIcon: { type: String, default: '' },
+  suffixIcon: { type: String, default: '' },
+  maxlength: { type: [Number, String], default: '' },
+  showWordLimit: Boolean,
+  status: { type: String, default: '' }   // error | success | warning
 })
 const slot = useSlots()
+// ===== v1.9 新增：图标别名、前后缀、字数统计与状态 =====
+const resolvedLeftIcon = computed(() => props.leftIcon || props.prefixIcon)
+const resolvedRightIcon = computed(() => props.rightIcon || props.suffixIcon)
+const valueLength = computed(() => String(props.modelValue ?? '').length)
+const hasAffix = computed(() => !!(slot.prefix || slot.suffix || props.showWordLimit))
+const groupStyle = computed(() => hasAffix.value
+  ? { 'min-width': 'auto', display: 'flex', 'align-items': 'center', gap: '6px' }
+  : { 'min-width': 'auto' })
+const innerStyle = computed(() => hasAffix.value
+  ? { flex: '1', 'min-width': '0', float: 'none', width: '100%' }
+  : {})
+const statusClass = computed(() => props.status ? `penguin-input-status-${props.status}` : '')
 const isStyle = ref({})
 const inptype = ref(props.type)
 let focusStyle = {
   'width':!!slot.btn?'auto':'100%',
   'float':!!slot.btn?'left':'auto',
-  'border-radius':!!slot.btn?'4px 0 0 4px':'4px',
+  'border-radius':!!slot.btn?'10px 0 0 10px':'10px',
   'border-color':'#dcdfe6f6'
 }
 isStyle.value = focusStyle
@@ -63,7 +85,7 @@ const focus  = (e) =>{
   isStyle.value = {
   'width':!!slot.btn?'auto':'100%',
   'float':!!slot.btn?'left':'auto',
-  'border-radius':!!slot.btn?'4px 0 0 4px':'4px',
+  'border-radius':!!slot.btn?'10px 0 0 10px':'10px',
   'border-color':props.focusColor
 }
   emit('focus',e)
@@ -72,7 +94,7 @@ const blur  = (e) =>{
   isStyle.value = {
     'width':!!slot.btn?'auto':'100%',
     'float':!!slot.btn?'left':'auto',
-    'border-radius':!!slot.btn?'4px 0 0 4px':'4px',
+    'border-radius':!!slot.btn?'10px 0 0 10px':'10px',
   }
   emit('blur',e)
 }
@@ -89,18 +111,12 @@ const clear = (e) =>{
 }
 // 显示密码
 const showPwd = (e) =>{
-  if(inptype.value=='text'){
-    inptype.value = 'password'
-  }else{
-    inptype.value = 'text'
-  }
-  
-  console.log(e);
+  inptype.value = inptype.value === 'text' ? 'password' : 'text'
 }
 const isClass = computed(()=>{
   return [
     props.clearable?'penguin-input-clearable':props.size=='default'?'penguin-input-default':`penguin-input-${props.size}`,
-    props.leftIcon!=""?`penguin-input-left-icon-${props.size}`:!props.clearable?props.rightIcon!=""?`penguin-input-right-icon-${props.size}`:'':'',
+    resolvedLeftIcon.value!=""?`penguin-input-left-icon-${props.size}`:!props.clearable?resolvedRightIcon.value!=""?`penguin-input-right-icon-${props.size}`:'':'',
     props.disabled?'penguin-input-disabled':'',
     props.type=='password'?props.showPassword?`penguin-input-password-showpassword-${props.size}`:`penguin-input-password-${props.size}`:''
   ]
@@ -447,5 +463,86 @@ input::-ms-input-placeholder { /* Microsoft Edge */
 .slide-fade-leave-to {
   transform: translateX(20px);
   opacity: 0;
+}
+
+/* ===== v1.9 新增：前后缀、字数统计、校验状态 ===== */
+.penguin-input-affix {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  font-size: 13px;
+  color: #8b96a6;
+  white-space: nowrap;
+}
+.penguin-input-limit {
+  flex: none;
+  font-size: 12px;
+  color: #98a2b3;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.penguin-input-status-error > div { border-color: #ec3437 !important; }
+.penguin-input-status-success > div { border-color: #09b63d !important; }
+.penguin-input-status-warning > div { border-color: #f57b29 !important; }
+
+/* ===== v1.11 视觉统一：圆角 / 高度 / 悬停与聚焦态 ===== */
+.penguin-input-default,
+.penguin-input-password-default,
+.penguin-input-password-showpassword-default,
+.penguin-input-clearable,
+.penguin-input-small,
+.penguin-input-password-small,
+.penguin-input-password-showpassword-small,
+.penguin-input-mini,
+.penguin-input-password-mini,
+.penguin-input-password-showpassword-mini {
+  border-radius: 10px;
+  border-color: var(--pui-border-strong, #d8e0ea);
+  background: var(--pui-bg-elevated, #fff);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+
+  input {
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: var(--pui-text, #1c2534);
+    font-variant-numeric: tabular-nums;
+
+    &::placeholder { color: var(--pui-text-muted, #8b96a6); }
+  }
+
+  &:hover { border-color: var(--pui-brand, #0e80eb); }
+  &:focus-within {
+    border-color: var(--pui-brand, #0e80eb);
+    box-shadow: 0 0 0 3px var(--pui-brand-soft, rgba(14, 128, 235, 0.12));
+  }
+}
+.penguin-input-default,
+.penguin-input-password-default,
+.penguin-input-password-showpassword-default,
+.penguin-input-clearable { height: 36px; }
+
+.penguin-input-small,
+.penguin-input-password-small,
+.penguin-input-password-showpassword-small { height: 30px; border-radius: 9px; }
+
+.penguin-input-mini,
+.penguin-input-password-mini,
+.penguin-input-password-showpassword-mini { height: 28px; border-radius: 8px; }
+
+.penguin-group-input-small .penguin-input-clearable { height: 30px; border-radius: 9px; }
+.penguin-group-input-mini .penguin-input-clearable { height: 28px; border-radius: 8px; }
+
+.penguin-input-clearable input,
+.penguin-input-password-showpassword-default input,
+.penguin-input-password-showpassword-small input,
+.penguin-input-password-showpassword-mini input { padding-right: 32px; }
+
+.penguin-input-disabled {
+  background: var(--pui-bg-soft, #f7f9fc);
+  opacity: 0.72;
+
+  input { color: var(--pui-text-muted, #8b96a6); cursor: not-allowed; }
+  &:hover { border-color: var(--pui-border-strong, #d8e0ea); }
 }
 </style>

@@ -1,18 +1,45 @@
+// ============================================================
+// 文档站视觉层 · Editorial / Industrial
+// 设计方向：发丝边框 + 等宽标签 + 单一钴蓝强调色 + 点阵氛围背景
+// 所有颜色来自 tokens.scss 的语义变量，明暗主题自动切换
+// ============================================================
+
+:root {
+  --pui-font-display: "Bahnschrift", "Segoe UI Variable Display", "PingFang SC",
+    "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --pui-font-body: "PingFang SC", "Microsoft YaHei", "Noto Sans SC",
+    "Helvetica Neue", sans-serif;
+  --pui-font-mono: "JetBrains Mono", "Cascadia Code", "SFMono-Regular",
+    Consolas, "Liberation Mono", monospace;
+  --pui-radius-sm: 6px;
+  --pui-radius-md: 10px;
+  --pui-radius-lg: 14px;
+  --pui-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --pui-dur: 220ms;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  color: #000000d9;
+  color: var(--pui-text);
+  font-family: var(--pui-font-body);
   font-size: 14px;
-  font-variant: tabular-nums;
-  background-color: #fff;
-  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  background-color: var(--pui-bg);
   margin: 0;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh;
 }
+
 hr {
   box-sizing: content-box;
   height: 0;
   overflow: visible;
 }
+
 h1,
 h2,
 h3,
@@ -21,79 +48,535 @@ h5,
 h6 {
   margin-top: 0;
   margin-bottom: 0.5em;
-  color: #000000d9;
-  font-weight: 500;
+  color: var(--pui-text);
+  font-family: var(--pui-font-display);
+  font-weight: 650;
 }
+
 .penguin-ui-doc {
-  font-family: Avenir, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-  Helvetica Neue, Arial, Noto Sans, sans-serif, apple color emoji,
-  segoe ui emoji, Segoe UI Symbol, noto color emoji, sans-serif;
+  font-family: var(--pui-font-body);
 }
-pre {
-  margin: 0;
-}
-pre > code {
-  font-family: Lucida Console, Consolas, Monaco, Andale Mono, Ubuntu Mono,
-  monospace;
-  line-height: 1.7;
-  direction: ltr;
-  white-space: pre;
-  text-align: left;
-  word-wrap: normal;
-  word-break: normal;
-  word-spacing: normal;
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
-  -webkit-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-  background: 0 0;
+
+// ---------------- 文档正文排版 ----------------
+.markdown-body {
   font-size: 14px;
-  border: 1px solid #f0f0f0;
-}
-.color-itembox {
-  width: 100%;
-  height: 100px;
-  li {
-    list-style: none;
-    width: 240px;
-    height: 100%;
-    left: none;
-    float: left;
-    margin-right: 0.5vw;
+  line-height: 1.75;
+  color: var(--pui-text-sub);
+
+  > h1 {
+    font-size: clamp(30px, 3.4vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--pui-text);
+    margin: 0 0 10px;
+    padding-bottom: 20px;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 44px;
+      height: 3px;
+      border-radius: 3px;
+      background: var(--pui-brand);
+      box-shadow: 18px 0 0 var(--pui-brand-soft);
+    }
+  }
+  // 标题下的导语（文档统一用 h4 作为副标题）
+  > h1 + h4 {
+    font-family: var(--pui-font-body);
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--pui-text-muted);
+    margin: 0 0 34px;
+    letter-spacing: 0.01em;
+  }
+  > h2 {
+    font-size: 21px;
+    letter-spacing: -0.02em;
+    margin: 44px 0 18px;
+    padding-left: 13px;
+    position: relative;
+    color: var(--pui-text);
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.22em;
+      bottom: 0.22em;
+      width: 3px;
+      border-radius: 3px;
+      background: var(--pui-brand);
+    }
+  }
+  > h3 {
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    margin: 22px 0 8px;
+    color: var(--pui-text);
+  }
+  > h4 {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--pui-text-muted);
+    margin: 0 0 14px;
+    line-height: 1.7;
+  }
+  p,
+  li,
+  td,
+  th,
+  blockquote {
+    color: var(--pui-text-sub);
+  }
+  strong,
+  b {
+    color: var(--pui-text);
+    font-weight: 650;
+  }
+  a {
+    color: var(--pui-brand);
+    text-decoration: none;
+    border-bottom: 1px solid var(--pui-brand-glow);
+    &:hover {
+      border-bottom-color: var(--pui-brand);
+    }
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid var(--pui-border);
+    margin: 28px 0;
+  }
+  blockquote {
+    border-left: 3px solid var(--pui-brand);
+    background: var(--pui-brand-soft);
+    padding: 10px 18px;
+    margin: 18px 0;
+    border-radius: 0 var(--pui-radius-sm) var(--pui-radius-sm) 0;
+    p {
+      margin: 0;
+    }
+  }
+  // 行内代码
+  :not(pre) > code {
+    font-family: var(--pui-font-mono);
+    font-size: 0.88em;
+    background: var(--pui-code-bg);
+    color: var(--pui-brand);
+    border: 1px solid var(--pui-border);
     border-radius: 4px;
-    color: #fff;
-    text-align: center;
-    span {
-      width: 100%;
-      display: inline-block;
-      line-height: 24px;
+    padding: 2px 6px;
+    word-break: break-word;
+  }
+  ul,
+  ol {
+    padding-left: 22px;
+  }
+  // 参数表
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 16px 0 8px;
+    font-size: 13px;
+    border: 1px solid var(--pui-border);
+    border-radius: var(--pui-radius-md);
+    overflow: hidden;
+    th,
+    td {
+      border-bottom: 1px solid var(--pui-border);
+      padding: 10px 14px;
+      text-align: left;
+      line-height: 1.6;
+    }
+    th {
+      background: var(--pui-bg-soft);
+      color: var(--pui-text);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    td {
+      color: var(--pui-text-sub);
+    }
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+    tbody tr:nth-child(even) {
+      background: color-mix(in srgb, var(--pui-bg-soft) 45%, transparent);
+    }
+    tbody tr:hover {
+      background: var(--pui-brand-soft);
+    }
+    code {
+      font-family: var(--pui-font-mono);
+      font-size: 12px;
+      color: var(--pui-brand);
+    }
+  }
+  // 组件库自带表格外层（Attributes.vue 用 t-table 渲染）
+  .penguin-table-default {
+    border: 1px solid var(--pui-border);
+    border-radius: var(--pui-radius-md);
+    overflow: hidden;
+    table {
+      border: 0;
+      border-radius: 0;
+    }
+  }
+}
+
+// ---------------- 示例卡 ----------------
+.componetnsBox {
+  position: relative;
+  padding: 42px 22px 26px;
+  border: 1px solid var(--pui-border);
+  border-bottom: 0;
+  border-radius: var(--pui-radius-lg) var(--pui-radius-lg) 0 0;
+  background-color: var(--pui-demo-bg);
+  // 点阵氛围层，不抢内容
+  background-image: radial-gradient(var(--pui-grid-line) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-position: 0 0;
+  box-sizing: border-box;
+  transition: border-color var(--pui-dur) var(--pui-ease),
+    box-shadow var(--pui-dur) var(--pui-ease);
+  &:hover {
+    border-color: var(--pui-border-strong);
+  }
+  &::before {
+    content: "DEMO / 示例";
+    position: absolute;
+    top: 14px;
+    left: 22px;
+    font-family: var(--pui-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--pui-text-muted);
+    pointer-events: none;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 19px;
+    left: 128px;
+    right: 22px;
+    height: 1px;
+    background: var(--pui-border);
+    pointer-events: none;
+  }
+}
+
+// ---------------- 代码块 ----------------
+.pre-code-box {
+  position: relative;
+  width: 100%;
+  margin: 0 0 22px;
+  border: 1px solid var(--pui-border);
+  border-radius: 0 0 var(--pui-radius-lg) var(--pui-radius-lg);
+  background: var(--pui-code-bg);
+  // 不能 overflow:hidden，否则内部 sticky 工具条失效
+  overflow: visible;
+  transition: border-color var(--pui-dur) var(--pui-ease);
+  &:hover {
+    border-color: var(--pui-border-strong);
+  }
+
+  pre {
+    margin: 0;
+    max-height: 460px;
+    overflow: auto;
+    border-radius: 0 0 var(--pui-radius-lg) var(--pui-radius-lg);
+    background: var(--pui-code-bg);
+  }
+  pre > code {
+    display: block;
+    padding: 18px 20px 22px;
+    font-family: var(--pui-font-mono);
+    font-size: 12.5px;
+    line-height: 1.8;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-wrap: normal;
+    word-break: normal;
+    tab-size: 2;
+    hyphens: none;
+    background: transparent;
+    border: 0;
+    color: var(--pui-hljs-text, #cbd5e1);
+  }
+  .showCode {
+    width: 100%;
+    min-height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid var(--pui-border);
+    border-radius: 0 0 var(--pui-radius-lg) var(--pui-radius-lg);
+    background: var(--pui-bg-soft);
+    color: var(--pui-text-muted);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--pui-dur) var(--pui-ease),
+      background var(--pui-dur) var(--pui-ease);
+    i {
+      transition: transform var(--pui-dur) var(--pui-ease);
+    }
+    i.rotate {
+      transform: rotate(180deg);
+    }
+    &:hover {
+      background: var(--pui-brand-soft);
+      color: var(--pui-brand);
+    }
+  }
+  &:has(pre) .showCode {
+    border-radius: 0;
+  }
+}
+
+// 吸顶工具条：长代码任意位置都能复制 / 收起
+.pre-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--pui-border);
+  border-radius: 0;
+  background: var(--pui-bg-elevated);
+  box-shadow: var(--pui-shadow-sm);
+  backdrop-filter: blur(10px);
+
+  &__lang {
+    font-family: var(--pui-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pui-text-muted);
+    padding: 3px 7px;
+    border: 1px solid var(--pui-border);
+    border-radius: 4px;
+  }
+  &__spacer {
+    flex: 1;
+  }
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--pui-border);
+    border-radius: var(--pui-radius-sm);
+    background: var(--pui-bg-soft);
+    color: var(--pui-text-sub);
+    font-family: var(--pui-font-body);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color var(--pui-dur) var(--pui-ease),
+      border-color var(--pui-dur) var(--pui-ease),
+      background var(--pui-dur) var(--pui-ease);
+    i {
       font-size: 14px;
     }
-    span:first-child {
-      margin-top: 12px;
+    &:hover {
+      color: var(--pui-brand);
+      border-color: var(--pui-brand);
+      background: var(--pui-brand-soft);
+    }
+    &--primary {
+      color: var(--pui-brand);
+      border-color: var(--pui-brand-glow);
     }
   }
-  span.outherColor {
-    width: 90px;
-    height: 100%;
-    display: inline-block;
-    margin-right: 0.5vw;
-    border-radius: 4px;
-    text-align: center;
-    line-height: 100px;
-    color: #fff;
-    font-size: 14px;
+}
+
+// 独立成块的代码（没有示例卡时）
+.markdown-body > pre {
+  border: 1px solid var(--pui-border);
+  border-radius: var(--pui-radius-md);
+  background: var(--pui-code-bg);
+  overflow: auto;
+  code {
+    font-family: var(--pui-font-mono);
+    font-size: 12.5px;
+    background: transparent;
+    border: 0;
   }
 }
-.componetnsBox {
-  padding: 30px 15px;
-  border: 1px solid #f0f0f0;
-  border-bottom: 0px;
-  border-radius: 4px 4px 0 0;
-  box-sizing: border-box;
+
+// ---------------- 滚动条 ----------------
+.penguinuirightView::-webkit-scrollbar,
+.pre-code-box pre::-webkit-scrollbar,
+.list-box::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
-pre > code > span {
-  font-size: 14px;
+.penguinuirightView::-webkit-scrollbar-thumb,
+.pre-code-box pre::-webkit-scrollbar-thumb,
+.list-box::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: var(--pui-border-strong);
+}
+.penguinuirightView::-webkit-scrollbar-track,
+.pre-code-box pre::-webkit-scrollbar-track,
+.list-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+// ---------------- Color 颜色页（新） ----------------
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+  gap: 12px;
+  margin: 4px 0 24px;
+}
+.palette-card {
+  border: 1px solid var(--pui-border);
+  border-radius: var(--pui-radius-md);
+  overflow: hidden;
+  background: var(--pui-bg-elevated);
+  cursor: pointer;
+  text-align: left;
+  transition: transform var(--pui-dur) var(--pui-ease),
+    box-shadow var(--pui-dur) var(--pui-ease),
+    border-color var(--pui-dur) var(--pui-ease);
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--pui-shadow);
+    border-color: var(--pui-border-strong);
+  }
+  &__swatch {
+    height: 74px;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px 12px;
+    font-family: var(--pui-font-mono);
+    font-size: 11px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    &--light {
+      color: #243248;
+      text-shadow: none;
+    }
+  }
+  &__meta {
+    padding: 10px 12px 12px;
+  }
+  &__name {
+    display: block;
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--pui-text);
+  }
+  &__hex {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--pui-font-mono);
+    font-size: 11px;
+    color: var(--pui-text-muted);
+  }
+}
+.scale-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  margin: 4px 0 22px;
+  border-radius: var(--pui-radius-sm);
+  overflow: hidden;
+  span {
+    height: 56px;
+    display: grid;
+    place-items: end center;
+    padding-bottom: 5px;
+    font-family: var(--pui-font-mono);
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform var(--pui-dur) var(--pui-ease);
+    &:hover {
+      transform: scaleY(1.08);
+    }
+  }
+}
+.border-samples,
+.shadow-samples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 4px 0 22px;
+}
+.border-sample,
+.shadow-sample {
+  border-radius: var(--pui-radius-md);
+  padding: 20px 16px 14px;
+  background: var(--pui-bg-elevated);
+  min-height: 92px;
+  &__demo {
+    display: grid;
+    place-items: center;
+    height: 40px;
+    border-radius: var(--pui-radius-sm);
+    background: var(--pui-demo-bg);
+    font-size: 12px;
+    color: var(--pui-text-sub);
+  }
+  &__name {
+    display: block;
+    margin-top: 12px;
+    font-size: 12.5px;
+    font-weight: 650;
+    color: var(--pui-text);
+  }
+  &__value {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--pui-font-mono);
+    font-size: 10.5px;
+    color: var(--pui-text-muted);
+    word-break: break-all;
+  }
+  cursor: pointer;
+}
+.palette-note {
+  font-size: 12px;
+  color: var(--pui-text-muted);
+  margin: -8px 0 24px;
+}
+
+// ---------------- 暗色下组件库浅色画布的兜底 ----------------
+[data-theme="dark"] {
+  .hljs {
+    color: var(--pui-hljs-text);
+    background: transparent;
+  }
+  // 老组件里写死的白底，统一收敛到深色表面
+  .penguin-table-default,
+  .penguin-select-option-find,
+  .penguin-dropdown-item-child {
+    background: var(--pui-bg-elevated);
+  }
+}
+
+// ---------------- 降级动效 ----------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

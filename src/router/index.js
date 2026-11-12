@@ -5,7 +5,8 @@ const router = createRouter({
     scrollBehavior: (to, from, savedPosition) => {
         document.title = to.name;
         if (to.fullPath !== "/") {
-            document.querySelector(".penguinuirightView").scrollTop = 0;
+            const scroller = document.querySelector(".penguinuirightView");
+            if (scroller) scroller.scrollTop = 0;
         }
     },
     routes: [...pagesRouter],

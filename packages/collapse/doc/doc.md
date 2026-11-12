@@ -2,100 +2,66 @@
 import demo1 from './demo1.vue'
 import demo2 from './demo2.vue'
 import demo3 from './demo3.vue'
-import demo4 from './demo4.vue'
-import demo5 from './demo5.vue'
-import demo6 from './demo6.vue'
-import demo7 from './demo7.vue'
-import demo8 from './demo8.vue'
-import Attributes from './Attributes.vue'
-import Event from './Events.vue'
 import preview from '@/components/preview.vue'
 </script>
 
-# Input 输入框
+# Collapse 折叠面板
 
-#### 数据输入框类型，通过键盘输入字符
-
-<br/>
+将复杂内容收纳到可展开的面板中，支持多选展开、手风琴模式、禁用项与自定义标题。
 
 ## 基本使用
 
-#### input 的基本使用
+`v-model` 绑定展开项 `name` 数组，点击标题栏切换展开状态。
 
 <div class="componetnsBox">
   <demo1/>
 </div>
-<preview compname="input" demoname="demo1"/>
+<preview compname="collapse" demoname="demo1"/>
 
-## 禁用状态
+## 手风琴模式
 
-#### input 的禁用状态，通过 _disabled_ 属性限制输入及操作
+设置 `accordion` 后同时只展开一项，`v-model` 变为单个 `name` 字符串；再次点击当前项可收起。
 
 <div class="componetnsBox">
   <demo2/>
 </div>
-<preview compname="input" demoname="demo2"/>
+<preview compname="collapse" demoname="demo2"/>
 
-## 可清空数据
+## 自定义标题与禁用
 
-#### input 的 value 可快捷清空，通过 _clearable_ 属性启用
+使用 `#title` 插槽自定义标题内容；`disabled` 禁用单个面板；`borderless` 去掉外层边框。
 
 <div class="componetnsBox">
   <demo3/>
 </div>
-<preview compname="input" demoname="demo3"/>
+<preview compname="collapse" demoname="demo3"/>
 
-## 带图标
+## Collapse Attributes 参数
 
-#### 可使用 _leftIcon_ 或者 _rightIcon_ 来定义显示图标并确定显示的位置。需要注意的是如果定义了右侧显示图标，那 _clearable_ 将不再起作用
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| v-model / modelValue | 当前展开项；普通模式为数组，手风琴模式为单个值 | array / string / number | `[]` |
+| accordion | 是否启用手风琴模式 | boolean | false |
+| borderless | 是否隐藏外层边框与背景 | boolean | false |
 
-<div class="componetnsBox">
-  <demo4/>
-</div>
-<preview compname="input" demoname="demo4"/>
+## Collapse Events 事件
 
-## 不同大小
+| 事件名 | 说明 | 回调参数 |
+| --- | --- | --- |
+| change | 展开项变化时触发 | 当前展开项（数组或字符串） |
+| update:modelValue | 支持 `v-model` 的更新事件 | 当前展开项 |
 
-#### 通过设置 _size_ 属性来适应不同大小
+## CollapseItem Attributes 参数
 
-<div class="componetnsBox">
-  <demo5/>
-</div>
-<preview compname="input" demoname="demo5"/>
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| name | 面板唯一标识，省略时使用组件实例 id | string / number | — |
+| title | 标题文本，可被 `#title` 插槽覆盖 | string | — |
+| disabled | 是否禁用 | boolean | false |
 
-## 组合输入
+## CollapseItem Slots 插槽
 
-#### 可通过插槽完成组合输入，插槽名默认为 _btn_
-
-<div class="componetnsBox">
-  <demo6/>
-</div>
-<preview compname="input" demoname="demo6"/>
-
-## 密码类型
-
-#### 密码类型的输入框，可通过 _showPassword_ 来启用是否开启显示密码
-
-<div class="componetnsBox">
-  <demo7/>
-</div>
-<preview compname="input" demoname="demo7"/>
-
-## 自定义 Focus 颜色
-
-#### 通过 _focusColor_ 属性自定义 input 在获取焦点后的颜色
-
-<div class="componetnsBox">
-  <demo8/>
-</div>
-<preview compname="input" demoname="demo8"/>
-
-## Attributes 参数
-
-<Attributes/>
-<br/>
-
-## Event 事件
-
-<Event/>
-<br/>
+| 插槽名 | 说明 |
+| --- | --- |
+| default | 面板内容 |
+| title | 自定义标题 |

@@ -1,7 +1,7 @@
 {
   "name": "penguinui",
   "private": false,
-  "version": "1.8.0",
+  "version": "1.16.0",
   "description": "一套适合开发者使用的轻量级 Vue 3 UI 组件库",
   "keywords": [
     "vue3",
@@ -22,12 +22,14 @@
   "author": "blue-sf",
   "main": "./dist/penguinui.umd.cjs",
   "module": "./dist/penguinui.js",
+  "types": "./types/index.d.ts",
   "style": "./dist/style.css",
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./dist/penguinui.js",
       "require": "./dist/penguinui.umd.cjs"
     },
@@ -35,13 +37,16 @@
     "./dist/style.css": "./dist/style.css"
   },
   "files": [
-    "dist/*"
+    "dist/*",
+    "types/*"
   ],
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:docs": "vite build --config vite.docs.config.js",
     "preview": "vite preview",
+    "preview:docs": "vite preview --config vite.docs.config.js",
     "release": "npm version patch && npm publish"
   },
   "dependencies": {

@@ -2,8 +2,9 @@
 <template>
   <t-pagination
     :total="200"
-    :current="1"
+    :current="5"
     :pageSize="10"
+    border
     :activeColors="activeColors"
   ></t-pagination>
 </template>
@@ -13,12 +14,12 @@
 import { reactive } from "vue";
 const state = reactive({
   activeColors: {
-    background: "#014B88",
-    hoverBackground: "#2684e1",
+    background: "#ffffff",
+    hoverBackground: "#014B88",
     borderColor: "#014B88",
     hoverBorderColor: "#005ba6",
-    color: "#fff",
-    hoverColor: "#fff",
+    color: "#014B88",
+    hoverColor: "#ffffff",
   },
 });
 const { activeColors } = state;

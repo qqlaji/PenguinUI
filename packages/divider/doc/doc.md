@@ -8,18 +8,16 @@ import preview from '@/components/preview.vue'
 </script>
 
 # Divider 分割线
-#### 区隔内容的分割线。 
+#### 区隔内容的分割线：支持水平 / 垂直、三种文案位置、任意线条样式与自定义颜色。
 
 <br />
 
 ## 基本使用
 
-<br />
-
 ### 对不同段落的文本进行分割。
 
 <div class="componetnsBox">
-  <demoBasic/>
+  <demo-basic/>
 </div>
 <preview compname="divider" demoname="demoBasic"/>
 
@@ -27,13 +25,10 @@ import preview from '@/components/preview.vue'
 
 ## 设置文案
 
-<br />
-
-### 可以在分割线上自定义文本内容
-<br />
+### 通过默认插槽放文案或图标，`position` 决定它靠左、居中还是靠右。
 
 <div class="componetnsBox">
-  <demoText/>
+  <demo-text/>
 </div>
 <preview compname="divider" demoname="demoText"/>
 
@@ -41,14 +36,10 @@ import preview from '@/components/preview.vue'
 
 ## 自定义样式
 
-<br />
-
-### 通过设置lineStyle来改变样式
-
-<br />
+### `lineStyle` 直接映射到 CSS `border-style`；`color` 可覆盖主题线色。
 
 <div class="componetnsBox">
-  <demoDash/>
+  <demo-dash/>
 </div>
 <preview compname="divider" demoname="demoDash"/>
 
@@ -56,10 +47,10 @@ import preview from '@/components/preview.vue'
 
 ## 垂直分隔线
 
-<br />
+### 常用于工具栏、面包屑等行内场景，高度跟随所在行的字号。
 
 <div class="componetnsBox">
-  <demoDire/>
+  <demo-dire/>
 </div>
 <preview compname="divider" demoname="demoDire"/>
 

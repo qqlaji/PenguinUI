@@ -42,6 +42,10 @@ const state = reactive({
         sel: "——",
         def: "——",
       },
+      { attr: "sortable", type: "Boolean", red: "该列可排序（v1.16 新增）", sel: "true / false", def: "false" },
+      { attr: "sorter", type: "Function", red: "自定义排序取值 (row) => any", sel: "——", def: "row[field]" },
+      { attr: "sortDirections", type: "Array", red: "排序方向顺序", sel: "['asc','desc'] / ['desc','asc']", def: "['asc','desc']" },
+      { attr: "filters", type: "Array", red: "该列筛选项：[{ label, value }]", sel: "——", def: "[]" },
     ],
   },
 });

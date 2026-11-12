@@ -1,15 +1,15 @@
 <!-- html -->
 <template>
   <t-pagination
-    :total="200"
-    :current="1"
+    :total="500"
+    :current="10"
     :pageSize="10"
-    :maxSize="8"
+    :pagerCount="7"
   ></t-pagination>
   <t-pagination
-    :total="1000"
-    :current="1"
-    :pageSize="20"
-    :maxSize="20"
+    :total="500"
+    :current="10"
+    :pageSize="10"
+    :pagerCount="11"
   ></t-pagination>
 </template>
