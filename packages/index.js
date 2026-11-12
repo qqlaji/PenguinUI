@@ -1,3 +1,10 @@
+// 图标与全局样式统一在库入口引入：构建后自动输出到 dist/style.css，
+// 按需引入任意组件时图标也不会丢失，且完全不依赖外部 CDN。
+import "../styles/iconfont.css";
+import "../styles/main.css";
+// 版本号统一从 package.json 读取，避免多处硬编码造成不一致
+import { version as PKG_VERSION } from "../package.json";
+
 //导入组件
 import tButton from "./button/index";
 import tInput from "./input/index";
@@ -27,11 +34,12 @@ import tMenu from "./menu/index";
 import tTabs from "./tabs/index";
 import tSpace from "./Space/index";
 import tPopover from './popover/index';
-import tProgress from './progress/index'
-import tColorPicker from './colorPicker/index'
-import tBreadcrumb from './breadcrumb/index'
-import tBadge from './badge/index'
-import tDivider from './divider/index'
+import tProgress from './progress/index';
+import tColorPicker from './colorPicker/index';
+import tBreadcrumb from './breadcrumb/index';
+import tBadge from './badge/index';
+import tDivider from './divider/index';
+import tIcon from './icon/index';
 //存在所有组件
 const components = [
   tButton,
@@ -62,7 +70,8 @@ const components = [
   tColorPicker,
   tBreadcrumb,
   tBadge,
-  tDivider
+  tDivider,
+  tIcon
 ];
 const install = (app) => {
   components.forEach((i) => {
@@ -74,7 +83,7 @@ const install = (app) => {
   app.config.globalProperties.$penguin = $penguin
 }
 const penguinUi = {
-  version: '0.0.4',
+  version: PKG_VERSION,
   install
 }
 /* istanbul ignore if */
@@ -117,6 +126,7 @@ export {
   tColorPicker,
   tBreadcrumb,
   tBadge,
-  tDivider
+  tDivider,
+  tIcon
 }
 export default penguinUi

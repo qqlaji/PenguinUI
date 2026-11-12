@@ -18,10 +18,10 @@
         >
         <t-button
             round
-            icon="t-icon-github"
+            icon="t-icon-gitee"
             style="padding: 15px 50px; margin-left: 2vw; font-size: 17px"
-            @click="goGuthub"
-        >Github</t-button
+            @click="goGitee"
+        >Gitee 仓库</t-button
         >
       </div>
       <div class="cardBox">
@@ -48,7 +48,7 @@
       </div>
       <div class="links">
         <p class="titles">链接</p>
-        <span @click="goGuthub">Github</span>
+        <span @click="goGitee">Gitee</span>
         <span @click="goToNpm">NPM</span>
       </div>
     </div>
@@ -59,13 +59,18 @@
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+const REPO_URL = "https://gitee.com/blue-sf/penguinui";
+const NPM_URL = "https://www.npmjs.com/package/penguinui";
+
 const toComponents = () => {
   router.push("/penguinui");
 };
-const goToNpm = () => {
-  window.open("https://www.npmjs.com/package/penguinui");
+const goGitee = () => {
+  window.open(REPO_URL);
 };
-
+const goToNpm = () => {
+  window.open(NPM_URL);
+};
 
 sessionStorage.setItem("mIndex", "0-0");
 sessionStorage.setItem("tabIndex", 0);

@@ -1,14 +1,33 @@
+/* 图标字体：完全本地化，不再依赖任何外部在线域名 */
 @font-face {
-  font-family: "iconfont"; /* Project id  */
-  src: url("https://penguinui.codeym.com/iconfont.ttf") format("truetype");
+  font-family: "iconfont";
+  src: url("./iconfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
-[class*="m-icon"] {
+/* 同时兼容 <i class="iconfont t-icon-*"> 与 <i class="t-icon-*"> 两种写法 */
+.iconfont,
+[class^="t-icon-"],
+[class*=" t-icon-"] {
   font-family: "iconfont" !important;
   font-size: 14px;
   font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  speak: never;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   float: none;
+  display: inline-block;
+}
+/* 兼容早期文档里 _m-icon-xxx_ 的写法 */
+[class^="m-icon-"],
+[class*=" m-icon-"] {
+  font-family: "iconfont" !important;
+  font-style: normal;
   display: inline-block;
 }
 .t-icon-shangchuan:before {
@@ -769,4 +788,58 @@
 
 .t-icon-round-loading:before {
   content: "\eb74";
+}
+
+/* ===== 新增图标：内联 SVG，不依赖字体文件，随组件库一起发布 ===== */
+.t-icon-github:before,
+.t-icon-penguin:before,
+.t-icon-spinner6:before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.t-icon-github:before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2016%2016'%3E%3Cpath%20fill%3D'%23000'%20d%3D'M8%200C3.58%200%200%203.58%200%208c0%203.54%202.29%206.53%205.47%207.59.4.07.55-.17.55-.38%200-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01%201.08.58%201.23.82.72%201.21%201.87.87%202.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95%200-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12%200%200%20.67-.21%202.2.82.64-.18%201.32-.27%202-.27.68%200%201.36.09%202%20.27%201.53-1.04%202.2-.82%202.2-.82.44%201.1.16%201.92.08%202.12.51.56.82%201.27.82%202.15%200%203.07-1.87%203.75-3.65%203.95.29.25.54.73.54%201.48%200%201.07-.01%201.93-.01%202.2%200%20.21.15.46.55.38A8.01%208.01%200%200%200%2016%208c0-4.42-3.58-8-8-8z'%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2016%2016'%3E%3Cpath%20fill%3D'%23000'%20d%3D'M8%200C3.58%200%200%203.58%200%208c0%203.54%202.29%206.53%205.47%207.59.4.07.55-.17.55-.38%200-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01%201.08.58%201.23.82.72%201.21%201.87.87%202.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95%200-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12%200%200%20.67-.21%202.2.82.64-.18%201.32-.27%202-.27.68%200%201.36.09%202%20.27%201.53-1.04%202.2-.82%202.2-.82.44%201.1.16%201.92.08%202.12.51.56.82%201.27.82%202.15%200%203.07-1.87%203.75-3.65%203.95.29.25.54.73.54%201.48%200%201.07-.01%201.93-.01%202.2%200%20.21.15.46.55.38A8.01%208.01%200%200%200%2016%208c0-4.42-3.58-8-8-8z'%2F%3E%3C%2Fsvg%3E");
+}
+.t-icon-penguin:before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.8'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20d%3D'M12%202.2a6%206%200%200%200-6%206v6.4l-1.6%203.1c-.3.6.1%201.3.8%201.3h13.6c.7%200%201.1-.7.8-1.3L18%2014.6V8.2a6%206%200%200%200-6-6z'%2F%3E%3Ccircle%20cx%3D'9.7'%20cy%3D'8.4'%20r%3D'1'%20fill%3D'%23000'%2F%3E%3Ccircle%20cx%3D'14.3'%20cy%3D'8.4'%20r%3D'1'%20fill%3D'%23000'%2F%3E%3Cpath%20fill%3D'%23000'%20d%3D'M10.4%2011.4h3.2L12%2013.6z'%2F%3E%3Cpath%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.8'%20stroke-linecap%3D'round'%20d%3D'M6.2%2010.5%203.8%2013.4M17.8%2010.5l2.4%202.9'%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.8'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20d%3D'M12%202.2a6%206%200%200%200-6%206v6.4l-1.6%203.1c-.3.6.1%201.3.8%201.3h13.6c.7%200%201.1-.7.8-1.3L18%2014.6V8.2a6%206%200%200%200-6-6z'%2F%3E%3Ccircle%20cx%3D'9.7'%20cy%3D'8.4'%20r%3D'1'%20fill%3D'%23000'%2F%3E%3Ccircle%20cx%3D'14.3'%20cy%3D'8.4'%20r%3D'1'%20fill%3D'%23000'%2F%3E%3Cpath%20fill%3D'%23000'%20d%3D'M10.4%2011.4h3.2L12%2013.6z'%2F%3E%3Cpath%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.8'%20stroke-linecap%3D'round'%20d%3D'M6.2%2010.5%203.8%2013.4M17.8%2010.5l2.4%202.9'%2F%3E%3C%2Fsvg%3E");
+}
+.t-icon-spinner6:before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'9'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'2.4'%20stroke-linecap%3D'round'%20stroke-dasharray%3D'42%2015'%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'9'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'2.4'%20stroke-linecap%3D'round'%20stroke-dasharray%3D'42%2015'%2F%3E%3C%2Fsvg%3E");
+  animation: t-icon-spin 1s linear infinite;
+}
+@keyframes t-icon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Gitee 仓库图标：内联 SVG，与字体文件无关 ===== */
+.t-icon-gitee:before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20fill%3D'%23000'%20d%3D'M12%202a10%2010%200%201%200%209.5%2013.2l-3.9-1.3A6.1%206.1%200%201%201%2012%205.9c1.7%200%203.2.7%204.3%201.8l-2.9%202.9%208.4%202.3V4.5l-2.9%202.9A9.9%209.9%200%200%200%2012%202z'%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20fill%3D'%23000'%20d%3D'M12%202a10%2010%200%201%200%209.5%2013.2l-3.9-1.3A6.1%206.1%200%201%201%2012%205.9c1.7%200%203.2.7%204.3%201.8l-2.9%202.9%208.4%202.3V4.5l-2.9%202.9A9.9%209.9%200%200%200%2012%202z'%2F%3E%3C%2Fsvg%3E");
 }

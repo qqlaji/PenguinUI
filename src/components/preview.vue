@@ -12,67 +12,67 @@
     </transition>
     <div class="showCode" @click="showOrhideCode">
       <span>{{ showCode ? "隐藏代码" : "显示代码" }}</span>
-      <i class="t-icon-code"></i>
+      <i class="t-icon-code" :class="{ rotate: showCode }"></i>
     </div>
-    <textarea id="inputCopy" />
+    <textarea ref="copyInput" class="pre-copy-input" />
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from "vue";
+import { onMounted, ref } from "vue";
 import Message from "../../packages/message/index";
 const props = defineProps({
   compname: {
     type: String,
     default: "",
-    require: true,
+    required: true,
   },
   demoname: {
     type: String,
     default: "",
-    require: true,
+    required: true,
   },
 });
 
 const showCode = ref(false);
-const border = ref("1px solid rgba(0,0,0,.06)");
 const showOrhideCode = () => {
   showCode.value = !showCode.value;
-  if (showCode.value) {
-    border.value = "0";
-  } else {
-    border.value = "1px solid rgba(0,0,0,.06)";
-  }
 };
 const sourceCode = ref("");
+const copyInput = ref(null);
+
+// 静态收集示例源码：开发环境和生产构建都能拿到，不再依赖 fetch 绝对路径
+const demoSources = import.meta.glob("/packages/*/doc/*.vue", { as: "raw" });
 async function getSourceCode() {
-  const isDev = import.meta.env.MODE === "development";
-  if (isDev) {
-    sourceCode.value = (
-        await import(
-            /* @vite-ignore */ `/packages/${props.compname}/doc/${props.demoname}.vue?raw`
-            )
-    ).default;
-  } else {
-    sourceCode.value = await fetch(
-        `/packages/${props.compname}/doc/${props.demoname}.vue`
-    ).then((res) => res.text());
+  const key = `/packages/${props.compname}/doc/${props.demoname}.vue`;
+  const loader = demoSources[key];
+  if (!loader) {
+    sourceCode.value = `<!-- 未找到示例源码：${key} -->`;
+    return;
+  }
+  try {
+    sourceCode.value = await loader();
+  } catch {
+    sourceCode.value = `<!-- 示例源码加载失败：${key} -->`;
   }
 }
-const copyCode = () => {
-  const input = document.getElementById("inputCopy");
-  input.value = sourceCode.value;
-  input.select();
-  if (document.execCommand("copy")) {
-    document.execCommand("copy");
+const copyCode = async () => {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(sourceCode.value);
+    } else {
+      copyInput.value.value = sourceCode.value;
+      copyInput.value.select();
+      if (!document.execCommand("copy")) throw new Error("copy failed");
+    }
     Message({
       type: "success",
       text: "代码复制成功",
     });
-  } else {
+  } catch {
     Message({
       type: "error",
-      text: "代码复制成功",
+      text: "代码复制失败",
     });
   }
 };
@@ -82,7 +82,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-#inputCopy {
+.pre-copy-input {
   opacity: 0;
   border: 0;
   outline: none;
@@ -138,6 +138,7 @@ onMounted(() => {
     cursor: pointer;
     i {
       margin-left: 10px;
+      transition: transform 0.15s ease;
     }
     i.rotate {
       transform: rotate(180deg);

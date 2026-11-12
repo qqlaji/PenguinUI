@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local agent workspace data (work logs, not source)
+.workbuddy/

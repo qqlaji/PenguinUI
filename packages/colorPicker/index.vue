@@ -57,7 +57,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, computed, onMounted, getCurrentInstance, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance, nextTick } from 'vue'
 const props = defineProps({
   modelValue: {
     type: String
@@ -68,14 +68,16 @@ const props = defineProps({
   },
   customClass: {
     type: String,
-    require: false
+    required: false
   },
   autoClose: {
     type: Boolean,
-    require: false,
+    required: false,
     default: false
   }
 })
+// 模板 ref 必须在 setup 顶层声明，否则 ref="colorPicker" 绑定不到
+const colorPicker = ref(null)
 const hoverColor = ref(null)
 const showColor = computed(() => {
   return hoverColor.value ?? props.modelValue ?? props.defaultColor
@@ -95,14 +97,20 @@ const setColor = (color) => {
   }
 }
 
+let detachDocumentClick = null
 onMounted(() => {
-  const colorPicker = ref()
   const vm = getCurrentInstance()
-  window.addEventListener('click', (e) => {
-    if (colorPicker && !vm.vnode.el.contains(e.target)) {
+  const onDocumentClick = (e) => {
+    const root = colorPicker.value || vm?.vnode?.el
+    if (root && !root.contains(e.target)) {
       close()
     }
-  })
+  }
+  window.addEventListener('click', onDocumentClick)
+  detachDocumentClick = () => window.removeEventListener('click', onDocumentClick)
+})
+onBeforeUnmount(() => {
+  if (detachDocumentClick) detachDocumentClick()
 })
 
 const h5Color = ref('')

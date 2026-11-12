@@ -11,7 +11,7 @@
         menitemDisabled: items.disabled,
       }"
     >
-      <div class="penguin-menu-item-title-box">
+      <div class="penguin-menu-item-title-box" :class="{ 'is-submenu': index != 0 }">
         <span class="menu-icon" :class="spanClass" :style="activeColots">
           <i :class="items.icon" v-if="items.icon"></i>
         </span>
@@ -228,18 +228,34 @@ const handelClick = (item) => {
     font-size: 14px;
     position: relative;
     .penguin-menu-item-title-box {
+      display: flex;
+      align-items: center;
+      height: 100%;
       span {
         color: v-bind("themes.color");
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
       }
       span.menu-icon {
         color: v-bind("themes.color");
         margin-right: 8px;
+        justify-content: center;
+        flex: none;
+      }
+      span.menu-title {
+        white-space: nowrap;
       }
       span.menu-icon-arrow {
         margin-left: 8px;
+        flex: none;
         i {
-          float: right;
-          transition: all 0.3s ease;
+          float: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1;
+          transition: transform 0.3s ease;
           font-size: 14px;
         }
         i.menuIconRotate {
@@ -248,6 +264,11 @@ const handelClick = (item) => {
         i.menuItemIconRotate {
           transform: rotate(90deg);
         }
+      }
+      /* 子级菜单的展开箭头靠右，并始终与文字保持垂直居中 */
+      &.is-submenu span.menu-icon-arrow {
+        margin-left: auto;
+        padding-left: 8px;
       }
       span.menitemDisabled {
         opacity: 0.3;

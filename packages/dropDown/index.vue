@@ -444,4 +444,44 @@ const { isOpenStyles } = state
   transform: translateY(-10px);
   opacity: .5;
 }
+
+/* ===== 图标对齐修正 =====
+   原样式在 li 内用 float:left 放图标，浮动元素会脱离行内流，
+   导致图标与文字不在同一条中线上；菜单触发区的头像/标题/箭头同理。
+   这里统一改为 flex 垂直居中，同时覆盖三套尺寸。 */
+.penguin-dropdown-default,
+.penguin-dropdown-small,
+.penguin-dropdown-mini {
+  [class$="-menu"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    span,
+    i {
+      float: none;
+      line-height: 1;
+      flex: none;
+    }
+    :slotted(img) {
+      float: none;
+      flex: none;
+      object-fit: cover;
+      margin-right: 0;
+    }
+  }
+  .penguin-dropdown-item ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i {
+      float: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      flex: none;
+    }
+  }
+}
 </style>

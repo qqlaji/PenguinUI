@@ -1,16 +1,16 @@
 <template>
   <button :class="isClass" :style="styles">
-    <i :class="isIconClass" v-if="leftIcon"></i>
+    <i :class="leftIconClass" v-if="resolvedLeftIcon"></i>
     <span
       :style="{
         'margin-left':
-          $slot['default'] === undefined ? '0px' : leftIcon ? '4px' : '0px',
+          $slot['default'] === undefined ? '0px' : resolvedLeftIcon ? '4px' : '0px',
         'margin-right':
           $slot['default'] === undefined ? '0px' : rightIcon ? '4px' : '0px',
       }"
       ><slot
     /></span>
-    <i :class="isIconClass" v-if="rightIcon"></i>
+    <i :class="rightIconClass" v-if="rightIcon"></i>
   </button>
 </template>
 <script>
@@ -35,16 +35,23 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  // 拼写修正后的别名，旧写法 custotColor 仍然兼容
+  customColor: {
+    type: String,
+    default: "",
+  },
   leftIcon: String,
   rightIcon: String,
+  // icon 等价于 leftIcon，兼容早期文档示例里的 icon="t-icon-*"
+  icon: String,
   localing: Boolean,
+  // 拼写修正后的别名，旧写法 localing 仍然兼容
+  loading: Boolean,
 });
-const mBtnDeaultStyle = {
-  background: props.custotColor,
-  border: props.custotColor,
-  color: "#fff",
-};
 const $slot = useSlots();
+const resolvedColor = computed(() => props.customColor || props.custotColor);
+const resolvedLeftIcon = computed(() => props.leftIcon || props.icon);
+const isSpinning = computed(() => props.loading || props.localing);
 const isClass = computed(() => {
   return [
     props.size === "default"
@@ -63,42 +70,29 @@ const isClass = computed(() => {
     },
   ];
 });
-const isIconClass = computed(() => {
-  return [
-    "iconfont",
-    props.leftIcon || props.rightIcon,
-    props.localing
-      ? props.leftIcon === "t-icon-loading1" ||
-        props.leftIcon === "t-icon-loading2" ||
-        props.leftIcon === "t-icon-loading3" ||
-        props.leftIcon === "t-icon-loading4" ||
-        props.leftIcon === "t-icon-loading5" ||
-        props.leftIcon === "t-icon-loading6" ||
-        props.rightIcon === "t-icon-loading1" ||
-        props.rightIcon === "t-icon-loading2" ||
-        props.rightIcon === "t-icon-loading3" ||
-        props.rightIcon === "t-icon-loading4" ||
-        props.rightIcon === "t-icon-loading5" ||
-        props.rightIcon === "t-icon-loading6"
-        ? "penguin-icon-loading"
-        : ""
-      : "",
-  ];
-});
+const isLoadingIcon = (name) => /^t-icon-(loading[1-6]|spinner6|round-loading)$/.test(name || "");
+// 左右图标分别计算，避免同时设置时右侧错显为左侧图标
+const leftIconClass = computed(() => [
+  "iconfont",
+  resolvedLeftIcon.value,
+  isSpinning.value && isLoadingIcon(resolvedLeftIcon.value) ? "penguin-icon-loading" : "",
+]);
+const rightIconClass = computed(() => [
+  "iconfont",
+  props.rightIcon,
+  isSpinning.value && isLoadingIcon(props.rightIcon) ? "penguin-icon-loading" : "",
+]);
 const styles = computed(() => {
+  const color = resolvedColor.value;
   return [
-    props.custotColor === ""
+    color === ""
       ? {}
       : props.type === "default"
       ? {}
-      : mBtnDeaultStyle,
+      : { background: color, border: color, color: "#fff" },
   ];
 });
 </script>
-<style>
-@import url("../../styles/iconfont.css");
-@import url("../../styles/main.css");
-</style>
 <style scoped lang="scss">
 .penguin-button {
   padding: 10px 20px;

@@ -5,11 +5,12 @@
 
 <!-- js -->
 <script setup>
-  import Loading from "../index.js"; //此处为本地示例，请使用import { Loading } from "penguin-ui";
+  import Loading from "../index.js"; //此处为本地示例，请使用 import { Loading } from "penguinui";
   const openLoading = () => {
     Loading.show({
       text:"正在努力加载中...",
-      img:"https://penguinui.codeym.com/logo.png"
+      // 使用本地资源，避免依赖已失效的外部域名
+      img: new URL("../../../src/assets/logo.png", import.meta.url).href
     })
     setTimeout(()=>{
       Loading.hide()

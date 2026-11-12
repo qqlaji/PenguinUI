@@ -1,5 +1,8 @@
 export default [
 	{'className':"t-icon-penguin"},
+	{'className':"t-icon-github"},
+	{'className':"t-icon-gitee"},
+	{'className':"t-icon-spinner6"},
 	{'className':"t-icon-collection_fill"},
 	{'className':"t-icon-collection"},
 	{'className':"t-icon-3column"},

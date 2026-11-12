@@ -2,11 +2,10 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createPinia } from "pinia";
 import PUI from '../packages/index';
-// import PUI from 'penguinui';
 import router from '@/router';
-import '../node_modules/penguinui/dist/style.css'
+// 图标与组件样式已由 packages/index.js 统一引入（本地资源，无外部 CDN）
 import hljs from "highlight.js";
-import "highlight.js/styles/color-brewer.css"
+import "highlight.js/styles/color-brewer.css";
 const app = createApp(App);
 app.use(PUI);
 app.use(router);
@@ -27,15 +26,11 @@ hljs.configure({
         "go",
         "c++",
         "c#",
-        "",
     ],
 });
 app.directive("highlight", function (el) {
     const blocks = el.querySelectorAll("pre code");
-    blocks.forEach((blocks) => {
-        hljs.highlightElement(blocks);
+    blocks.forEach((block) => {
+        hljs.highlightElement(block);
     });
 });
-
-
-

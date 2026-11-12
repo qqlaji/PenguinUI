@@ -2,26 +2,26 @@
 
 ## 安装
 
-#### 推荐使用 _npm_ 的方式安装,也可选用 _cpm_ 或 _yarn_ 进行安装。
+#### 推荐使用 npm 的方式安装，也可选用 pnpm 或 yarn。
 
-```
-npm install  penguin-ui
-cnpm install  penguin-ui --save
-yarn add penguin-ui
+```bash
+npm install penguinui --save
+pnpm add penguinui
+yarn add penguinui
 ```
 
 <br/>
 
-## 使用 penguin-ui
+## 使用 penguinui
 
-#### 需要注意的是 css 样式文件需要您单独引入。
+#### 需要注意的是 css 样式文件需要单独引入（图标字体已内联在样式文件中，无需额外配置）。
 
 ```javascript
 /*js*/
 import { createApp } from "vue";
 import App from "@/App.vue";
-import penguinUi from "penguin-ui";
-import "../node_modules/penguin-ui/dist/style.css";
+import penguinUi from "penguinui";
+import "penguinui/style.css";
 
 const app = createApp(App);
 app.use(penguinUi);
@@ -32,23 +32,23 @@ app.mount("#app");
 
 ## 愉快开始
 
-#### 至此 penguin-ui 就引入完成并且可以使用了。
-
 ```html
 <!-- html -->
-<t-button>默认按钮</m-buttonn>
+<t-button>默认按钮</t-button>
 <t-button type="primary">主要按钮</t-button>
+<t-icon name="search" />
 ```
 
 <br/>
 
 ## 按需引用
 
-#### 您可以根据个人需要按需引用组件来使用，按需引用时不需要使用 <font color=#0e80eb>**app.use()**</font> 方法注册。
+#### 按需引用时不需要使用 **app.use()** 注册，但样式仍需引入一次。
 
 ```javascript
 /*js*/
-import { tButton, tInput } from "penguin-ui";
+import { tButton, tInput } from "penguinui";
+import "penguinui/style.css";
 ```
 
 <br/>

@@ -1,6 +1,5 @@
 ---
-version: 0.20
-title: button
+title: Color 颜色
 ---
 
 # Color 颜色

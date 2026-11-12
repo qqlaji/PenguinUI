@@ -2,7 +2,7 @@
   <div class="header-block-box">
     <div class="logoBox">
       <img src="../assets/logo.png" alt="penguin-ui" @click="toHome" />
-      <t-badge type="primary" value="V 1.7.51">
+      <t-badge type="primary" :value="`V ${version}`">
         <a href="javascript:" @click="toHome">Penguin UI</a>
       </t-badge>
     </div>
@@ -12,12 +12,15 @@
     </div>
   </div>
 </template>
->
+
 <script setup>
 import { useRouter } from "vue-router";
 import { reactive, ref, onMounted } from "vue";
-const { push, currentRoute } = useRouter();
+import pkg from "../../package.json";
 
+// 版本号直接读取 package.json，发布时不再需要手动改这里
+const version = pkg.version;
+const { push, currentRoute } = useRouter();
 
 const toHome = () => {
   push("/");
@@ -26,9 +29,9 @@ const toHome = () => {
 };
 const fullPath = ref(currentRoute.value.fullPath)
 const tabIndex = ref(
-    fullPath === "/penguinui"
+    fullPath.value === "/penguinui"
         ? 1
-        : sessionStorage.getItem("tabIndex") || 0
+        : Number(sessionStorage.getItem("tabIndex") || 0)
 );
 
 const state = reactive({
@@ -41,22 +44,32 @@ const state = reactive({
       name: "组件",
       path: "/penguinui",
     },
+    {
+      name: "Gitee",
+      path: "open",
+      url: "https://gitee.com/blue-sf/penguinui",
+    },
+    {
+      name: "NPM",
+      path: "open",
+      url: "https://www.npmjs.com/package/penguinui",
+    },
   ],
 });
 const { tools } = state;
 const pageView = (item, index) => {
-  tabIndex.value = index;
-  sessionStorage.setItem("tabIndex", index);
   if (item.path === "open") {
     window.open(item.url);
-  } else {
-    if (item.path !== currentRoute.value.path) {
-      push(item.path);
-    }
+    return;
+  }
+  tabIndex.value = index;
+  sessionStorage.setItem("tabIndex", index);
+  if (item.path !== currentRoute.value.path) {
+    push(item.path);
   }
 };
 onMounted(() => {
-  if (fullPath === "/penguinui") {
+  if (fullPath.value === "/penguinui") {
     sessionStorage.setItem("tabIndex", 1);
   }
 });

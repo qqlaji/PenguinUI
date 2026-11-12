@@ -42,7 +42,7 @@
   </div>
 </template>
 <script>
-import { ref, reactive, onMounted, useSlots } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, useSlots } from 'vue'
 export default{
   name:"tOptfile"
 }
@@ -109,14 +109,14 @@ const deleteImg = (index) =>{
   FileList.splice(index,1)
   emit('update:fileList',File)
 }
+let detachDropEvents = null
 onMounted(()=>{
   if(props.drop&&props.targetType=='box'){
-    let dropArea = refDiv.value
-    dropArea.addEventListener('drop',(e)=>{
-      e.stopPropagation()
-      e.preventDefault()
-      File.unshift(...e.dataTransfer.files)
-      FileList.unshift(...e.dataTransfer.files)
+    const dropArea = refDiv.value
+    if(!dropArea) return
+    const addFiles = (files)=>{
+      File.unshift(...files)
+      FileList.unshift(...files)
       File.forEach((item,index)=>{
         item.preImgUrl = windowURL.createObjectURL(item);
       })
@@ -124,27 +124,38 @@ onMounted(()=>{
       emit('update:fileList',File)
       lableText.value = props.label
       activeFile.value = false
-    }, false)
-    dropArea.addEventListener('dragleave', (e) => {
+    }
+    const onDrop = (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      addFiles(e.dataTransfer.files)
+    }
+    const onDragLeave = (e) => {
       e.stopPropagation()
       e.preventDefault()
       activeFile.value = false
       lableText.value = props.label
-    })
-    dropArea.addEventListener('dragenter', (e) => {
+    }
+    const onDragEnter = (e) => {
       e.stopPropagation()
       e.preventDefault()
       activeFile.value = true
       lableText.value = "松开鼠标完成"
       emit('beforeChange')
-    })
-    dropArea.addEventListener('dragover', (e) => {
+    }
+    const onDragOver = (e) => {
       e.stopPropagation()
       e.preventDefault()
       activeFile.value = true
       lableText.value = "松开鼠标完成"
-    })
+    }
+    const events = [['drop', onDrop], ['dragleave', onDragLeave], ['dragenter', onDragEnter], ['dragover', onDragOver]]
+    events.forEach(([type, handler]) => dropArea.addEventListener(type, handler, false))
+    detachDropEvents = () => events.forEach(([type, handler]) => dropArea.removeEventListener(type, handler, false))
   }
+})
+onBeforeUnmount(()=>{
+  if(detachDropEvents) detachDropEvents()
 })
 </script>
 
