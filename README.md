@@ -19,13 +19,19 @@
 > **文档站：<https://qqlaji.github.io/PenguinUI/>**
 > 全部 82 个组件都有可运行示例、Props 表格与图标检索，支持 `Ctrl / ⌘ + K` 全站搜索与明暗主题切换。
 
-### 快速使用
+## 安装
 
 ```bash
-npm install penguinui --save
+npm install penguinui
 # 或
 pnpm add penguinui
+# 或
+yarn add penguinui
 ```
+
+支持 Vue 3，同时提供 ES Module、CommonJS 与 TypeScript 类型声明，无需额外安装 `@types` 包。
+
+## 使用
 
 ### 全量引入
 
@@ -37,23 +43,35 @@ import 'penguinui/style.css'
 
 createApp(App).use(PenguinUI).mount('#app')
 
-console.log(PenguinUI.version) // 与 package.json 保持一致
+console.log(PenguinUI.version) // 当前版本号
 ```
-
-> `penguinui/style.css` 已包含全部图标字体（内联，无外部 CDN 依赖），无需再单独引入图标资源。
 
 ### 按需引入
 
 ```js
+import { createApp } from 'vue'
+import App from './App.vue'
 import { tButton, tInput, tIcon } from 'penguinui'
 import 'penguinui/style.css'
 
+const app = createApp(App)
 app.component('t-button', tButton)
 app.component('t-input', tInput)
 app.component('t-icon', tIcon)
+app.mount('#app')
 ```
 
-### 图标
+> `penguinui/style.css` 已包含全部图标字体（内联，无外部 CDN 依赖），无需再单独引入图标资源。
+
+### TypeScript
+
+包内自带类型声明，直接使用即可获得完整的 Props 提示：
+
+```ts
+import type { ButtonProps } from 'penguinui'
+```
+
+## 图标
 
 ```html
 <!-- 推荐：组件写法 -->
@@ -66,9 +84,9 @@ app.component('t-icon', tIcon)
 <i class="iconfont t-icon-search"></i>
 ```
 
-全部 230 枚图标见文档站「Icon 图标」页，支持分类筛选、中文关键词搜索、实时预览与点击复制类名 / 组件标签。新增 39 枚内联 SVG 图标（如 `sun`、`moon`、`sparkles`、`rocket`、`check-circle`、`cat-data`），用法与字体图标完全一致；`cat-*` 系列为文档站 8 个分组的专属图形编码。
+全部 230 枚图标见文档站「Icon 图标」页，支持分类筛选、中文关键词搜索、实时预览与点击复制类名 / 组件标签。
 
-### 组件一览
+## 组件一览
 
 > 共 82 个组件（不含「安装使用」「颜色」这两个纯文档页），全部在文档站有可运行示例与 Props 表格。
 
@@ -76,36 +94,22 @@ app.component('t-icon', tIcon)
 | --- | --- |
 | 常规 | Layout、ConfigProvider、Typography、PageHeader、Scrollbar、Color、Icon |
 | 通用 | Button、FloatButton、Input、AutoComplete、Mentions、Textarea、Space、Select、TreeSelect、Transfer、Dropdown、Radio、Checkbox、Switch、OptFile、ColorPicker、Rate、Form、InputNumber、Slider、Upload、InputOTP、Flex、Splitter |
-| 数据 | Badge、Table（**支持排序 / 筛选 / 行选择 / 分页**）、Pagination、Date、DatePicker、Tree、Menu、Tabs、Progress、Breadcrumb、Steps、Timeline、TimePicker、Cascader、Statistic、Countdown、VirtualList、Calendar、Descriptions |
+| 数据 | Badge、Table（支持排序 / 筛选 / 行选择 / 分页）、Pagination、Date、DatePicker、Tree、Menu、Tabs、Progress、Breadcrumb、Steps、Timeline、TimePicker、Cascader、Statistic、Countdown、VirtualList、Calendar、Descriptions |
 | 交互 | Message、Popover、Confirm、Modal、Drawer、Loading、Backtop、Popconfirm、Affix、Anchor、Tour |
-| 展示 | Card、Collapse、Avatar、Tag、Empty、Skeleton、Carousel、Image、**ImageViewer**、Segmented、List、Comment、Bubble、Signature、QRCode、Watermark |
-| 代码 | **CodeBlock**（零依赖语法高亮） |
+| 展示 | Card、Collapse、Avatar、Tag、Empty、Skeleton、Carousel、Image、ImageViewer、Segmented、List、Comment、Bubble、Signature、QRCode、Watermark |
+| 代码 | CodeBlock（零依赖语法高亮） |
 | 反馈 | Alert、Tooltip、Notification、Result |
 | 其他 | Divider |
 
-加粗为 v1.16.0 新增组件。文档站支持 `Ctrl / ⌘ + K` 全站搜索（组件 + 图标）、明暗主题切换与移动端侧栏。
+## 浏览器支持
 
-### 本地开发
+现代浏览器（Chrome / Edge / Firefox / Safari 最近两个大版本）。组件库使用 CSS 变量实现主题定制，不支持 IE。
 
-```bash
-npm install
-npm run dev           # 启动文档站
-npm run build         # 构建组件库到 dist/
-npm run build:docs    # 构建文档站到 docs-dist/（相对路径，可部署到任意子目录）
-npm run preview:docs  # 本地预览文档站产物
-```
+## 反馈
 
-### 发布到 npm
+- 问题反馈：<https://github.com/qqlaji/PenguinUI/issues>
+- 仓库地址：<https://github.com/qqlaji/PenguinUI> ｜ <https://gitee.com/blue-sf/penguinui>
 
-```bash
-npm run build
-npm login                 # 首次发布或凭据过期时
-npm publish               # 发布 package.json 中的版本
-# 或：npm run release     # 自动 patch 版本号并发布
-```
+## License
 
-仓库地址：
-
-- GitHub：<https://github.com/qqlaji/PenguinUI>
-- Gitee：<https://gitee.com/blue-sf/penguinui>
-- 在线文档：<https://qqlaji.github.io/PenguinUI/>
+MIT

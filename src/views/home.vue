@@ -54,7 +54,10 @@
                 @focus="preload(item)"
             >
               <span>{{ item.title }}</span>
-              <em v-if="item.isNew">NEW</em>
+              <span class="li-tail">
+                <em v-if="item.isNew">NEW</em>
+                <i v-if="pendingPath === item.path" class="li-spinner" aria-label="加载中"></i>
+              </span>
             </li>
           </ul>
         </section>
@@ -367,17 +370,23 @@ const switchMenu = (item) => {
     &.is-pending {
       color: var(--cat);
       background: var(--pui-bg-elevated);
-      &::after {
-        content: '';
-        position: absolute;
-        right: 8px;
-        width: 11px;
-        height: 11px;
-        border: 2px solid var(--cat-soft);
-        border-top-color: var(--cat);
-        border-radius: 50%;
-        animation: pui-pending-spin 0.7s linear infinite;
-      }
+    }
+    // NEW 与 loading 一起排在右侧，用 flex 占位，避免互相遮挡
+    .li-tail {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .li-spinner {
+      flex: none;
+      width: 11px;
+      height: 11px;
+      border: 2px solid var(--cat-soft);
+      border-top-color: var(--cat);
+      border-radius: 50%;
+      animation: pui-pending-spin 0.7s linear infinite;
     }
     &.active {
       color: var(--cat);
