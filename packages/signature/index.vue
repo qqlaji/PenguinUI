@@ -40,9 +40,10 @@
       <div v-if="!hasInk && placeholder" class="pui-signature__placeholder" aria-hidden="true">
         {{ placeholder }}
       </div>
-    </div>
 
-    <div v-if="showBaseline" class="pui-signature__baseline"></div>
+      <!-- 基线画在画布内部，不再占用文档流高度，避免挤压下方提示文字 -->
+      <div v-if="showBaseline" class="pui-signature__baseline" aria-hidden="true"></div>
+    </div>
 
     <div v-if="$slots.footer || showTools" class="pui-signature__footer">
       <slot name="footer">
@@ -391,10 +392,11 @@ defineExpose({ clear, undo, toDataURL, download, loadImage, hasInk });
   }
 
   &__baseline {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
     height: 0;
-    margin-top: -22px;
-    margin-left: 24px;
-    margin-right: 24px;
     border-bottom: 1px dashed var(--pui-border, #e7ecf3);
     pointer-events: none;
   }
@@ -404,10 +406,15 @@ defineExpose({ clear, undo, toDataURL, download, loadImage, hasInk });
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    // 提示文字与签名画布之间留出呼吸间距，避免紧贴书写区域
+    margin-top: 10px;
+    // 画布底部圆角与边框在部分浏览器下会溢出 1px，留一点内边距更稳
+    padding: 0 2px;
   }
 
   &__tip {
     font-size: 12px;
+    line-height: 1.6;
     color: var(--pui-text-muted, #8b96a6);
   }
 

@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import hljs from "highlight.js/lib/core";
 import Message from "../../packages/message/index";
 
@@ -44,10 +44,13 @@ const copyInput = ref(null);
 const codeEl = ref(null);
 let copiedTimer = null;
 
-const lineCount = computed(() => sourceCode.value.split("\n").length);
+const lineCount = computed(() => (sourceCode.value ? sourceCode.value.split("\n").length : 0));
 
 const toggleCode = () => {
   showCode.value = !showCode.value;
+  // 源码改为按需加载：一个文档页往往有 7+ 个示例，
+  // 全部在挂载时拉取会显著拖慢路由切换，这里只在首次展开时获取
+  if (showCode.value && !loaded.value) getSourceCode();
 };
 const hideCode = () => {
   showCode.value = false;
@@ -55,11 +58,13 @@ const hideCode = () => {
 
 // 静态收集示例源码：开发环境与生产构建都能拿到，不依赖 fetch 绝对路径
 const demoSources = import.meta.glob("/packages/*/doc/*.vue", { as: "raw" });
+const loaded = ref(false);
 async function getSourceCode() {
   const key = `/packages/${props.compname}/doc/${props.demoname}.vue`;
   const loader = demoSources[key];
   if (!loader) {
     sourceCode.value = `<!-- 未找到示例源码：${key} -->`;
+    loaded.value = true;
     return;
   }
   try {
@@ -67,6 +72,7 @@ async function getSourceCode() {
   } catch {
     sourceCode.value = `<!-- 示例源码加载失败：${key} -->`;
   }
+  loaded.value = true;
 }
 
 // 源码是异步加载的，指令首次执行时可能还是空串；这里主动补一次高亮
@@ -98,7 +104,10 @@ const copyCode = async () => {
   }
 };
 
-onMounted(getSourceCode);
+// 只保留一份 DOM 级清理，不再在挂载时预取源码（见 toggleCode）
+onBeforeUnmount(() => {
+  clearTimeout(copiedTimer);
+});
 </script>
 
 <style scoped lang="scss">

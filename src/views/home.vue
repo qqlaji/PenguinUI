@@ -43,12 +43,15 @@
             <li
                 v-for="item in group.list"
                 :key="item.path"
-                :class="{ active: route.path === item.path }"
+                :class="{ active: route.path === item.path, 'is-pending': pendingPath === item.path }"
                 role="button"
                 tabindex="0"
                 @click="switchMenu(item)"
                 @keydown.enter="switchMenu(item)"
                 @keydown.space.prevent="switchMenu(item)"
+                @mouseenter="preload(item)"
+                @mouseleave="cancelPreload"
+                @focus="preload(item)"
             >
               <span>{{ item.title }}</span>
               <em v-if="item.isNew">NEW</em>
@@ -85,7 +88,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MenuList from "@/const/menuList.js";
 import { useMainStore } from "@/store/index";
@@ -149,17 +152,46 @@ const total = computed(() =>
 const toggleGroup = (index) => {
   collapsed.value = { ...collapsed.value, [index]: !collapsed.value[index] };
 };
+
+// 切换前先把目标页的 chunk 预热掉，点击时就不用等网络往返
+const pendingPath = ref("");
+let hoverTimer = null;
+const preload = (item) => {
+  clearTimeout(hoverTimer);
+  // 悬停 60ms 才真正预取，避免鼠标划过整列时发起一堆无用请求
+  hoverTimer = setTimeout(() => {
+    const to = router.resolve(item.path);
+    const comp = to.matched.length ? to.matched[to.matched.length - 1].components?.default : null;
+    if (comp && typeof comp === "function") comp().catch(() => {});
+  }, 60);
+};
+const cancelPreload = () => clearTimeout(hoverTimer);
+
 const switchMenu = (item) => {
-  if (route.path !== item.path) router.push(item.path);
-  if (mainRef.value) mainRef.value.scrollTop = 0;
+  cancelPreload();
   closeSidebar();
+  if (route.path === item.path) {
+    if (mainRef.value) mainRef.value.scrollTop = 0;
+    return;
+  }
+  pendingPath.value = item.path;
+  router
+    .push(item.path)
+    .finally(() => {
+      if (pendingPath.value === item.path) pendingPath.value = "";
+      // 路由组件挂载后再复位滚动，避免打在旧 DOM 上
+      nextTick(() => {
+        if (mainRef.value) mainRef.value.scrollTop = 0;
+      });
+    });
 };
 </script>
 
 <style lang="scss" scoped>
 .penguinui-doc {
   display: flex;
-  height: calc(100vh - 66px);
+  // 用与顶栏一致的高度变量，避免 66/67px 差 1px 导致最外层出现滚动条
+  height: calc(100vh - var(--pui-header-h, 67px));
   overflow: hidden;
   background: var(--pui-bg);
 
@@ -331,6 +363,22 @@ const switchMenu = (item) => {
     span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     &:hover { color: var(--cat); background: var(--pui-bg-elevated); transform: translateX(2px); }
     &:focus-visible { outline: 2px solid var(--cat); outline-offset: -2px; }
+    // 正在加载目标页：先给出即时反馈，避免点击后像是“卡住了”
+    &.is-pending {
+      color: var(--cat);
+      background: var(--pui-bg-elevated);
+      &::after {
+        content: '';
+        position: absolute;
+        right: 8px;
+        width: 11px;
+        height: 11px;
+        border: 2px solid var(--cat-soft);
+        border-top-color: var(--cat);
+        border-radius: 50%;
+        animation: pui-pending-spin 0.7s linear infinite;
+      }
+    }
     &.active {
       color: var(--cat);
       background: var(--cat-soft);
@@ -443,5 +491,9 @@ aside::-webkit-scrollbar-track, .list-box::-webkit-scrollbar-track, main::-webki
     background: var(--pui-mask);
   }
   main { padding: 0 20px; }
+}
+
+@keyframes pui-pending-spin {
+  to { transform: rotate(360deg); }
 }
 </style>

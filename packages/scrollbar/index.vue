@@ -1,14 +1,20 @@
 <template>
+  <!-- 外层只负责定位与裁剪，不参与滚动；滚动只发生在内部 viewport，滑块因而固定不动 -->
   <div
-    ref="wrapRef"
     :class="['pui-scrollbar', wrapClass, { 'is-hover': hovered || always, 'is-dragging': dragging }]"
     :style="mergedWrapStyle"
-    @scroll.passive="onScroll"
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <div ref="viewRef" :class="['pui-scrollbar__view', viewClass]" :style="viewStyle">
-      <slot></slot>
+    <div
+      ref="wrapRef"
+      class="pui-scrollbar__viewport"
+      :style="viewportStyle"
+      @scroll.passive="onScroll"
+    >
+      <div ref="viewRef" :class="['pui-scrollbar__view', viewClass]" :style="viewStyle">
+        <slot></slot>
+      </div>
     </div>
 
     <template v-if="!native">
@@ -103,6 +109,8 @@ const toPx = (v) => {
   return /^\d+(\.\d+)?$/.test(s) ? `${s}px` : s;
 };
 
+// 外层容器的尺寸交给它自己撑开（height / maxHeight 由使用者传入）；
+// 内层 viewport 铺满外层，滚动只发生在这里
 const mergedWrapStyle = computed(() => {
   const style = { ...(typeof props.wrapStyle === 'object' ? props.wrapStyle : {}) };
   if (props.height !== '') style.height = toPx(props.height);
@@ -110,8 +118,14 @@ const mergedWrapStyle = computed(() => {
   return style;
 });
 
+const viewportStyle = computed(() => ({
+  overflowY: 'auto',
+  overflowX: 'auto'
+}));
+
 /* ---------------- 尺寸与位置计算 ---------------- */
-const TRACK_GAP = 4;
+// 轨道上下各留 2px 内缩，与 .is-vertical 的 top/bottom: 2px 对应
+const TRACK_INSET = 4;
 
 function update() {
   const el = wrapRef.value;
@@ -125,8 +139,8 @@ function update() {
   bar.yVisible = scrollHeight - clientHeight > 1;
   bar.xVisible = scrollWidth - clientWidth > 1;
 
-  const trackH = Math.max(0, clientHeight - TRACK_GAP);
-  const trackW = Math.max(0, clientWidth - TRACK_GAP);
+  const trackH = Math.max(0, clientHeight - TRACK_INSET);
+  const trackW = Math.max(0, clientWidth - TRACK_INSET);
 
   const h = bar.yVisible ? Math.max(props.minSize, Math.round(trackH * (clientHeight / scrollHeight))) : 0;
   const w = bar.xVisible ? Math.max(props.minSize, Math.round(trackW * (clientWidth / scrollWidth))) : 0;
@@ -145,12 +159,12 @@ function update() {
 
 let rafId = null;
 function onScroll(e) {
+  emit('scroll', e);
   if (rafId) return;
   rafId = requestAnimationFrame(() => {
     rafId = null;
     update();
   });
-  emit('scroll', e);
 }
 
 /* ---------------- 拖拽 ---------------- */
@@ -166,7 +180,7 @@ function startDrag(axis, e) {
     axis,
     start: axis === 'y' ? e.clientY : e.clientX,
     scroll: axis === 'y' ? el.scrollTop : el.scrollLeft,
-    track: axis === 'y' ? el.clientHeight - TRACK_GAP : el.clientWidth - TRACK_GAP,
+    track: axis === 'y' ? el.clientHeight - TRACK_INSET : el.clientWidth - TRACK_INSET,
     thumb: axis === 'y' ? bar.thumbH : bar.thumbW
   };
   dragging.value = true;
@@ -278,14 +292,21 @@ defineExpose({ update, scrollTo, setScrollTop, setScrollLeft, wrapRef, viewRef }
 <style scoped lang="scss">
 .pui-scrollbar {
   position: relative;
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  overscroll-behavior: contain;
+  // 外层不滚动，只做定位参照；滑块是它的直接子元素，因此不会随内容滚走
+  overflow: hidden;
 
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+  &__viewport {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior: contain;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
   }
 
   &__view {

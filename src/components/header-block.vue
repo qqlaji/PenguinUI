@@ -91,12 +91,16 @@ const isMac = computed(() => typeof navigator !== 'undefined' && /Mac|iPhone|iPa
   position: sticky;
   top: 0;
   z-index: 200;
+  // 固定总高度（含底部 1px 边框），避免与文档区 calc(100vh - var(--pui-header-h))
+  // 差 1px 而多出最外层滚动条
+  box-sizing: border-box;
+  height: var(--pui-header-h, 66px);
   background: var(--pui-header-bg);
   backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid var(--pui-border);
 }
 .site-header__inner {
-  height: 66px;
+  height: 100%;
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 clamp(16px, 3vw, 40px);

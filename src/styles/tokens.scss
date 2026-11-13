@@ -2,6 +2,8 @@
 // 组件库产物仅引入 styles/iconfont.css 与 styles/main.css
 :root,
 [data-theme='light'] {
+  // 顶栏总高度（含底部 1px 边框）：文档区高度统一按此计算，避免多出外层滚动条
+  --pui-header-h: 67px;
   --pui-bg: #ffffff;
   --pui-bg-soft: #f7f9fc;
   --pui-bg-elevated: #ffffff;
