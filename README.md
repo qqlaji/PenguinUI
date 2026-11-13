@@ -4,13 +4,20 @@
     <p style="font-size:20px">一套适合开发者使用的轻量级 UI 组件库，完美支持 Vue 3</p>
   </h1>
   <p>
+    <a href="https://qqlaji.github.io/PenguinUI/"><strong>📖 在线文档 / 组件预览</strong></a>
+  </p>
+  <p>
     <a href="https://www.npmjs.com/package/penguinui">npm</a> ·
-    <a href="https://gitee.com/blue-sf/penguinui">Gitee 仓库</a> ·
-    <a href="https://gitee.com/blue-sf/penguinui/issues">问题反馈</a>
+    <a href="https://github.com/qqlaji/PenguinUI">GitHub</a> ·
+    <a href="https://gitee.com/blue-sf/penguinui">Gitee</a> ·
+    <a href="https://github.com/qqlaji/PenguinUI/issues">问题反馈</a>
   </p>
 </div>
 
 <br/>
+
+> **文档站：<https://qqlaji.github.io/PenguinUI/>**
+> 全部 82 个组件都有可运行示例、Props 表格与图标检索，支持 `Ctrl / ⌘ + K` 全站搜索与明暗主题切换。
 
 ### 快速使用
 
@@ -97,4 +104,8 @@ npm publish               # 发布 package.json 中的版本
 # 或：npm run release     # 自动 patch 版本号并发布
 ```
 
-仓库地址：<https://gitee.com/blue-sf/penguinui>
+仓库地址：
+
+- GitHub：<https://github.com/qqlaji/PenguinUI>
+- Gitee：<https://gitee.com/blue-sf/penguinui>
+- 在线文档：<https://qqlaji.github.io/PenguinUI/>

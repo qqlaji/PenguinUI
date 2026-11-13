@@ -30,6 +30,9 @@
             <button class="btn btn--ghost" type="button" @click="go('/penguinui/icon')">
               <t-icon name="grid" :size="16" /> 浏览图标库
             </button>
+            <a class="btn btn--text" :href="GITHUB" target="_blank" rel="noopener">
+              <t-icon name="github" :size="17" /> GitHub
+            </a>
             <a class="btn btn--text" :href="GITEE" target="_blank" rel="noopener">
               <t-icon name="gitee" :size="17" /> Gitee
             </a>
@@ -207,6 +210,7 @@
         <span>v{{ version }} · MIT License</span>
       </div>
       <div class="home-footer__links">
+        <a :href="GITHUB" target="_blank" rel="noopener">GitHub</a>
         <a :href="GITEE" target="_blank" rel="noopener">Gitee</a>
         <a :href="NPM" target="_blank" rel="noopener">npm</a>
         <a href="javascript:" @click="openSearch">全站搜索</a>
@@ -228,6 +232,7 @@ import { theme, toggleTheme } from '@/composables/useTheme';
 import { openSearch } from '@/composables/useUi';
 
 const version = pkg.version;
+const GITHUB = 'https://github.com/qqlaji/PenguinUI';
 const GITEE = 'https://gitee.com/blue-sf/penguinui';
 const NPM = 'https://www.npmjs.com/package/penguinui';
 const router = useRouter();

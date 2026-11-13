@@ -11,13 +11,13 @@
     "component-library",
     "vite"
   ],
-  "homepage": "https://gitee.com/blue-sf/penguinui",
+  "homepage": "https://qqlaji.github.io/PenguinUI/",
   "repository": {
     "type": "git",
-    "url": "git+https://gitee.com/blue-sf/penguinui.git"
+    "url": "git+https://github.com/qqlaji/PenguinUI.git"
   },
   "bugs": {
-    "url": "https://gitee.com/blue-sf/penguinui/issues"
+    "url": "https://github.com/qqlaji/PenguinUI/issues"
   },
   "author": "blue-sf",
   "main": "./dist/penguinui.umd.cjs",

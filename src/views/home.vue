@@ -73,6 +73,8 @@
       </div>
       <footer class="doc-footer">
         <span>Penguin UI · 轻量级 Vue 3 组件库</span>
+        <a href="https://qqlaji.github.io/PenguinUI/" target="_blank" rel="noopener">在线文档</a>
+        <a href="https://github.com/qqlaji/PenguinUI" target="_blank" rel="noopener">GitHub</a>
         <a href="https://gitee.com/blue-sf/penguinui" target="_blank" rel="noopener">Gitee</a>
         <a href="https://www.npmjs.com/package/penguinui" target="_blank" rel="noopener">npm</a>
         <a href="javascript:" @click="openSearch">搜索文档 (Ctrl K)</a>

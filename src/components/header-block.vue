@@ -27,6 +27,9 @@
         <button class="icon-btn" type="button" :title="theme === 'dark' ? '切换到浅色' : '切换到深色'" @click="toggleTheme">
           <t-icon :name="theme === 'dark' ? 'sun' : 'moon'" :size="18" />
         </button>
+        <a class="icon-btn" :href="GITHUB" target="_blank" rel="noopener" title="GitHub 仓库">
+          <t-icon name="github" :size="18" />
+        </a>
         <a class="icon-btn" :href="GITEE" target="_blank" rel="noopener" title="Gitee 仓库">
           <t-icon name="gitee" :size="18" />
         </a>
@@ -52,6 +55,7 @@ import { theme, toggleTheme } from '@/composables/useTheme';
 import { openSearch, sidebarOpen, toggleSidebar } from '@/composables/useUi';
 
 const version = pkg.version;
+const GITHUB = 'https://github.com/qqlaji/PenguinUI';
 const GITEE = 'https://gitee.com/blue-sf/penguinui';
 const NPM = 'https://www.npmjs.com/package/penguinui';
 const router = useRouter();
