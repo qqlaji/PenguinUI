@@ -392,32 +392,104 @@ export interface TimelineItemProps {
   type?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
 }
 
+/** 单条校验规则 */
+export interface FormRule {
+  required?: boolean;
+  type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'email' | 'url' | 'date';
+  pattern?: RegExp | string;
+  /** 数字→值域；字符串/数组→长度 */
+  min?: number;
+  max?: number;
+  /** 精确长度 */
+  len?: number;
+  /** 枚举白名单 */
+  enum?: Array<string | number | boolean>;
+  /** 触发时机，不写则任何时机都校验 */
+  trigger?: 'blur' | 'change' | Array<'blur' | 'change'>;
+  /** 校验前对值做转换 */
+  transform?: (value: any) => any;
+  /** 自定义校验，返回 true / 字符串错误 / Error / Promise */
+  validator?: (
+    rule: FormRule,
+    value: any,
+    model: Record<string, any>
+  ) => boolean | string | Error | void | Promise<boolean | string | Error | void>;
+  message?: string;
+  /** 用于 min/max 报错时的字段名 */
+  label?: string;
+}
+
 export interface FormProps {
   model?: Record<string, any>;
-  rules?: Record<string, any>;
+  rules?: Record<string, FormRule[] | FormRule>;
   labelWidth?: string | number;
   labelPosition?: 'left' | 'right' | 'top';
   inline?: boolean;
   disabled?: boolean;
   showMessage?: boolean;
+  /** 校验失败时滚动到第一个错误字段 */
+  scrollToError?: boolean;
+  /** 滚动偏移量 */
+  scrollOffset?: number;
 }
 
 export interface FormItemProps {
   prop?: string;
   label?: string;
   labelWidth?: string | number;
+  labelPosition?: 'left' | 'right' | 'top';
   required?: boolean;
-  rules?: any;
+  rules?: FormRule[] | FormRule;
   showMessage?: boolean;
+  /** 手动错误信息，优先级最高 */
+  error?: string;
+  /** 触发校验时机 */
+  validateTrigger?: 'blur' | 'change' | Array<'blur' | 'change'>;
+  showStatus?: boolean;
+}
+
+/** validate() 失败时 reject 的错误对象 */
+export interface FormValidateError extends Error {
+  isValidateError: true;
+  message: string;
+  fields: Array<{
+    prop: string;
+    errors: string[];
+    element: HTMLElement | null;
+  }>;
 }
 
 export interface FormInstance {
-  validate(): Promise<boolean>;
-  validateField(prop: string): Promise<boolean>;
+  /** 校验全部字段；通过 resolve(true)，失败 reject FormValidateError */
+  validate(): Promise<true>;
+  /** 校验全部字段但不抛异常 */
+  validateQuietly(): Promise<boolean>;
+  validateField(prop: string | string[]): Promise<
+    Array<{ prop: string; valid: boolean; errors: string[] }>
+  >;
   resetFields(): void;
   clearValidate(props?: string | string[]): void;
-  scrollToField(prop: string): void;
+  setInitialValues(model: Record<string, any>): void;
+  submit(): Promise<boolean>;
+  fields: import('vue').ComputedRef<Array<{ prop: string }>>;
+  el: import('vue').Ref<HTMLElement | null>;
 }
+
+/** 规则预设 */
+export declare const rulePresets: {
+  required(label?: string, trigger?: 'blur' | 'change'): FormRule;
+  email(trigger?: 'blur' | 'change'): FormRule;
+  phone(trigger?: 'blur' | 'change'): FormRule;
+  url(trigger?: 'blur' | 'change'): FormRule;
+  range(min: number, max: number, label?: string): FormRule;
+};
+
+/** 独立运行的规则校验函数 */
+export declare function runRules(
+  value: any,
+  rules: FormRule[] | FormRule,
+  model?: Record<string, any>
+): Promise<string[]>;
 
 export interface UploadProps {
   modelValue?: UploadFile[];
@@ -568,6 +640,7 @@ export interface CodeBlockInstance {
 /** 语法高亮工具函数 */
 export declare function highlight(code: string, lang?: string): string;
 export declare function highlightLines(code: string, lang?: string): string[];
+export declare function normalizeLang(lang: string): string;
 
 export interface ModalProps {
   modelValue?: boolean;
@@ -626,18 +699,90 @@ export interface MenuProps {
 export interface TreeNode {
   label?: string;
   value?: string | number;
+  /** 节点唯一标识，不传则按路径自动生成（如 '0-2-1'） */
+  key?: string | number;
   children?: TreeNode[];
   disabled?: boolean;
+  /** 异步加载场景写 false 表示「还有子节点未加载」 */
+  isLeaf?: boolean;
   [key: string]: any;
 }
 
 export interface TreeProps {
   options?: TreeNode[];
-  icon?: string;
+  /** 标签字段名 */
+  labelField?: string;
+  /** 标签字段名（旧写法） */
+  labelFiled?: string;
+  /** 子节点字段名 */
+  childrenField?: string;
+  /** 禁用字段名 */
+  disabledField?: string;
+
+  /** 开启复选框（与 multiple 等价） */
+  checkable?: boolean;
+  /** 已勾选的节点 key（v-model） */
+  modelValue?: Array<string | number>;
+  /** 高亮选中的节点 key（v-model:selected） */
+  selected?: Array<string | number>;
+  /** 父子勾选不联动 */
+  checkStrictly?: boolean;
+  /** 只允许勾选叶子节点 */
+  onlyLeafCheckable?: boolean;
+  /** 无复选框时的单选圆点 */
+  selectable?: boolean;
+
+  /** 是否可勾选（旧写法，等价 checkable） */
+  multiple?: boolean;
   defaultOpenNodes?: Array<string | number>;
   defaultSelectNodes?: Array<string | number>;
-  multiple?: boolean;
+
+  /** 图标 */
+  icon?: string;
+  openedIcon?: string;
+  leafIcon?: string;
+  /** 每层缩进（px） */
+  indent?: number;
+
+  /** 搜索过滤 */
+  filterable?: boolean;
+  filterPlaceholder?: string;
+  expandOnFilter?: boolean;
+  /** 展开 / 收起全部工具栏 */
+  showToolbar?: boolean;
+
+  /** 异步加载 */
+  lazy?: boolean;
+  loadData?: (node: TreeNode) => Promise<TreeNode[]>;
+
+  emptyText?: string;
+  maxHeight?: string | number;
+  disabled?: boolean;
   customClass?: string;
+}
+
+export interface TreeInstance {
+  expandAll(): void;
+  collapseAll(): void;
+  expand(key: string | number): void;
+  getCheckedKeys(): Array<string | number>;
+  setCheckedKeys(keys: Array<string | number>): void;
+  getFlatNodes(): Array<Record<string, any>>;
+}
+
+/** Tree 勾选变化事件负载 */
+export interface TreeCheckPayload {
+  key: string;
+  checked: boolean;
+  keys: string[];
+  nodes: TreeNode[];
+}
+
+/** Tree 展开变化事件负载 */
+export interface TreeExpandPayload {
+  key: string;
+  expanded: boolean;
+  node?: TreeNode;
 }
 
 export interface TreeSelectProps {
@@ -683,15 +828,64 @@ export interface TimePickerProps {
   placeholder?: string;
 }
 
+export interface CascaderOption {
+  value: string | number;
+  label: string;
+  children?: CascaderOption[];
+  disabled?: boolean;
+  /** 异步加载场景写 false 表示「还有子节点未加载」 */
+  isLeaf?: boolean;
+  [key: string]: any;
+}
+
+/** 单选路径 */
+export type CascaderPath = Array<string | number>;
+
 export interface CascaderProps {
-  modelValue?: any;
-  options?: any[];
+  /**
+   * 单选：一条路径 ['zj','hz']
+   * 多选：路径数组 [['zj','hz'],['fj','xm']]
+   */
+  modelValue?: CascaderPath | CascaderPath[];
+  options?: CascaderOption[];
   placeholder?: string;
   disabled?: boolean;
   clearable?: boolean;
   size?: ComponentSize;
   separator?: string;
   changeOnSelect?: boolean;
+
+  /* v1.19 新增 */
+  /** 多选 */
+  multiple?: boolean;
+  /** 父子勾选不联动（多选生效） */
+  checkStrictly?: boolean;
+  /** 多选最多显示的标签数 */
+  maxTagCount?: number;
+  /** 标签展示策略 */
+  showCheckedStrategy?: 'leaf' | 'parent';
+
+  /** 搜索 */
+  filterable?: boolean;
+  filterPlaceholder?: string;
+  noResultText?: string;
+
+  /** 异步加载子节点 */
+  lazyLoad?: (node: CascaderOption) => Promise<CascaderOption[]>;
+
+  /** 字段名自定义 */
+  valueField?: string;
+  labelField?: string;
+  childrenField?: string;
+  disabledField?: string;
+  isLeafField?: string;
+}
+
+export interface CascaderInstance {
+  open(): void;
+  close(): void;
+  clear(): void;
+  getCheckedPaths(): CascaderPath[];
 }
 
 export interface PaginationProps {
@@ -718,7 +912,9 @@ export interface CarouselProps {
   autoplay?: boolean;
   interval?: number;
   arrow?: 'hover' | 'always' | 'never';
-  indicator?: 'outside' | 'inside' | 'none' | 'hover';
+  indicator?: 'always' | 'hover' | 'never';
+  /** 指示器形态：dot 圆点 / line 短横线 / progress 填充进度 / number 数字 */
+  indicatorType?: 'dot' | 'line' | 'progress' | 'number';
   direction?: 'horizontal' | 'vertical';
   initialIndex?: number;
   pauseOnHover?: boolean;
@@ -1067,6 +1263,242 @@ export interface SplitterProps {
   height?: number | string;
   customClass?: string;
 }
+
+/* =========================================================================
+ * Resizable 伸缩框
+ * ========================================================================= */
+
+export type ResizableHandle =
+  | 'top' | 'right' | 'bottom' | 'left'
+  | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+export type ResizableHandlesMode =
+  | 'all' | 'horizontal' | 'vertical' | 'corner'
+  | ResizableHandle[];
+
+export interface ResizePayload {
+  width: number;
+  height: number;
+  dir: ResizableHandle;
+}
+
+export interface ResizableProps {
+  width?: number | string;
+  height?: number | string;
+  minWidth?: number;
+  minHeight?: number;
+  maxWidth?: number;
+  maxHeight?: number;
+  handles?: ResizableHandlesMode;
+  /** 拖拽步长（px） */
+  grid?: number;
+  aspectRatio?: boolean;
+  ratio?: number;
+  disabled?: boolean;
+  customClass?: string;
+}
+
+export interface ResizableInstance {
+  setSize(width?: number, height?: number): void;
+  getSize(): { width: number; height: number };
+}
+
+export interface ResizableGroupProps {
+  /** 各面板占比数组，长度即面板数量 */
+  defaultSizes?: number[];
+  direction?: 'horizontal' | 'vertical';
+  minSize?: number;
+  maxSize?: number;
+  size?: number | string;
+  dividerSize?: number;
+  disabled?: boolean;
+}
+
+/* =========================================================================
+ * DragMove 拖拽移动
+ * ========================================================================= */
+
+export type DragBounds =
+  | 'parent'
+  | 'viewport'
+  | string
+  | (() => { left: number; top: number; right: number; bottom: number });
+
+export interface DragMoveProps {
+  x?: number;
+  y?: number;
+  defaultX?: number;
+  defaultY?: number;
+  bounds?: DragBounds;
+  /** 只有匹配该选择器的元素能触发拖拽 */
+  trigger?: string;
+  grid?: number;
+  preventSelect?: boolean;
+  disabled?: boolean;
+  raiseOnDrag?: boolean;
+  customClass?: string;
+}
+
+export interface DragMoveInstance {
+  reset(): void;
+  moveTo(x: number, y: number): void;
+  getPosition(): { x: number; y: number };
+}
+
+/* =========================================================================
+ * AudioPlayer 音频播放器
+ * ========================================================================= */
+
+export interface AudioPlayerProps {
+  src?: string;
+  title?: string;
+  subtitle?: string;
+  cover?: string;
+  variant?: 'default' | 'mini' | 'card';
+  autoplay?: boolean;
+  loop?: boolean;
+  loopable?: boolean;
+  volume?: number;
+  showVolume?: boolean;
+  rates?: number[];
+  playbackRate?: number;
+  downloadable?: boolean;
+  downloadName?: string;
+  disabled?: boolean;
+}
+
+export interface AudioPlayerState {
+  playing: boolean;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  muted: boolean;
+  rate: number;
+}
+
+export interface AudioPlayerInstance {
+  play(): Promise<void>;
+  pause(): void;
+  seek(seconds: number): void;
+  getState(): AudioPlayerState;
+}
+
+/* =========================================================================
+ * VideoPlayer 视频播放器
+ * ========================================================================= */
+
+export interface VideoPlayerProps {
+  src?: string;
+  poster?: string;
+  /** 宽高比，如 '16 / 9' */
+  aspectRatio?: string;
+  width?: number | string;
+  preload?: 'none' | 'metadata' | 'auto';
+  autoplay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
+  volume?: number;
+  showVolume?: boolean;
+  rates?: number[];
+  playbackRate?: number;
+  /** 控制栏自动隐藏延时（ms），0 常驻 */
+  controlsTimeout?: number;
+  pip?: boolean;
+}
+
+export interface VideoPlayerState {
+  playing: boolean;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  muted: boolean;
+  rate: number;
+  fullscreen: boolean;
+}
+
+export interface VideoPlayerInstance {
+  play(): Promise<void>;
+  pause(): void;
+  seek(seconds: number): void;
+  toggleFullscreen(): Promise<void>;
+  getState(): VideoPlayerState;
+}
+
+/* =========================================================================
+ * Chat 对话
+ * ========================================================================= */
+
+export type ChatRole = 'user' | 'assistant' | 'system';
+export type ChatMessageStatus = 'streaming' | 'done' | 'error';
+
+export interface ChatMessage {
+  id?: string | number;
+  role: ChatRole;
+  content: string;
+  avatar?: string;
+  name?: string;
+  time?: string;
+  status?: ChatMessageStatus;
+  /** 单条消息覆盖全局 markdown 设置 */
+  markdown?: boolean;
+  /** 消息内图片：字符串 URL 或 { url, name } */
+  images?: Array<string | { url: string; name?: string }>;
+}
+
+export interface ChatProps {
+  messages?: ChatMessage[];
+  modelValue?: string;
+  variant?: 'default' | 'compact' | 'plain';
+  title?: string;
+  subtitle?: string;
+  showHeader?: boolean;
+  placeholder?: string;
+  loading?: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  maxlength?: number;
+  sendOn?: 'enter' | 'ctrl-enter';
+  markdown?: boolean;
+  /** 允许 Markdown 原始 HTML（有 XSS 风险，默认关闭） */
+  allowHtml?: boolean;
+  showAvatar?: boolean;
+  showActions?: boolean;
+  userAvatar?: string;
+  assistantAvatar?: string;
+  userLabel?: string;
+  assistantLabel?: string;
+  emptyTitle?: string;
+  emptyHint?: string;
+  quickPrompts?: Array<string | { label: string; value?: string }>;
+  clearable?: boolean;
+  regenerable?: boolean;
+  hasMore?: boolean;
+  showDisclaimer?: boolean;
+  disclaimer?: string;
+  /** 是否允许发送图片 */
+  allowImage?: boolean;
+  /** 单次最多图片数 */
+  maxImages?: number;
+  /** 单张图片大小上限（MB） */
+  maxImageSize?: number;
+  /** 单张图片最大边长（px），超出会等比压缩 */
+  maxImageEdge?: number;
+}
+
+export interface ChatInstance {
+  scrollToBottom(smooth?: boolean): void;
+  focus(): void;
+  getDraft(): string;
+}
+
+/** 零依赖的 Markdown 渲染器 */
+export declare function renderMarkdown(
+  markdown: string,
+  options?: { allowHtml?: boolean }
+): string;
+
+/** 去掉 Markdown 标记，返回纯文本 */
+export declare function stripMarkdown(markdown: string): string;
 
 export interface ListProps {
   data?: any[];
@@ -1514,6 +1946,12 @@ export declare const tOptfile: DefineComponent<OptfileProps>;
 export declare const tWatermark: DefineComponent<WatermarkProps>;
 export declare const tFlex: DefineComponent<FlexProps>;
 export declare const tSplitter: DefineComponent<SplitterProps>;
+export declare const tResizable: DefineComponent<ResizableProps>;
+export declare const tResizableGroup: DefineComponent<ResizableGroupProps>;
+export declare const tDragMove: DefineComponent<DragMoveProps>;
+export declare const tAudioPlayer: DefineComponent<AudioPlayerProps>;
+export declare const tVideoPlayer: DefineComponent<VideoPlayerProps>;
+export declare const tChat: DefineComponent<ChatProps>;
 export declare const tList: DefineComponent<ListProps>;
 export declare const tInputOTP: DefineComponent<InputOTPProps>;
 export declare const tTypography: DefineComponent<TypographyProps>;
@@ -1535,6 +1973,53 @@ export declare const tCodeBlock: DefineComponent<CodeBlockProps>;
 
 /** 读取上层 ConfigProvider 的配置；未包裹时返回默认值 */
 export declare function useConfig(): UseConfigReturn;
+
+/* =========================================================================
+ * 组合式函数
+ * ========================================================================= */
+
+export type PopperPlacement =
+  | 'top' | 'top-start' | 'top-end'
+  | 'bottom' | 'bottom-start' | 'bottom-end'
+  | 'left' | 'left-start' | 'left-end'
+  | 'right' | 'right-start' | 'right-end';
+
+export interface UsePopperOptions {
+  triggerRef: import('vue').Ref<HTMLElement | null>;
+  panelRef: import('vue').Ref<HTMLElement | null>;
+  placement?: PopperPlacement;
+  /** 与触发元素的间距 */
+  offset?: number;
+  /** 视口边距 */
+  viewportPadding?: number;
+  /** 空间不足时翻转 */
+  autoFlip?: boolean;
+  /** 钳制到视口内 */
+  clampToViewport?: boolean;
+  /** 面板最小宽度对齐触发元素 */
+  matchTriggerWidth?: boolean;
+  /** 点击外部关闭 */
+  closeOnOutside?: boolean;
+  /** Esc 关闭 */
+  closeOnEsc?: boolean;
+  disabled?: import('vue').Ref<boolean>;
+  onVisibleChange?: (visible: boolean) => void;
+}
+
+export interface UsePopperReturn {
+  visible: import('vue').Ref<boolean>;
+  pos: import('vue').Ref<{ top: number; left: number; actualPlacement: string; arrowOffset: number }>;
+  panelStyle: import('vue').ComputedRef<Record<string, string>>;
+  arrowStyle: import('vue').ComputedRef<Record<string, string>>;
+  actualPlacement: import('vue').ComputedRef<string>;
+  open(): Promise<void>;
+  close(): void;
+  toggle(): Promise<void> | void;
+  update(): void;
+}
+
+/** 浮层定位与开合逻辑（12 方向 / 自动翻转 / 视口钳制 / 跟随滚动） */
+export declare function usePopper(options: UsePopperOptions): UsePopperReturn;
 
 /* =========================================================================
  * 服务式 API 声明

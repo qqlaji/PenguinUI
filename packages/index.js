@@ -73,6 +73,11 @@ import tSegmented from './segmented/index';
 import tWatermark from './watermark/index';
 import tFlex from './flex/index';
 import tSplitter from './splitter/index';
+import tResizable, { tResizableGroup } from './resizable/index';
+import tDragMove from './dragMove/index';
+import tAudioPlayer from './audioPlayer/index';
+import tVideoPlayer from './videoPlayer/index';
+import tChat from './chat/index';
 import tList from './list/index';
 import tInputOTP from './inputOtp/index';
 import tTypography from './typography/index';
@@ -160,6 +165,12 @@ const components = [
   tWatermark,
   tFlex,
   tSplitter,
+  tResizable,
+  tResizableGroup,
+  tDragMove,
+  tAudioPlayer,
+  tVideoPlayer,
+  tChat,
   tList,
   tInputOTP,
   tTypography,
@@ -272,6 +283,12 @@ export {
   tWatermark,
   tFlex,
   tSplitter,
+  tResizable,
+  tResizableGroup,
+  tDragMove,
+  tAudioPlayer,
+  tVideoPlayer,
+  tChat,
   tList,
   tInputOTP,
   tTypography,
@@ -292,4 +309,12 @@ export {
   tCodeBlock,
   Notification
 }
+
+// ---- 组合式工具函数 ----
+export { useConfig } from './configProvider/config';
+export { usePopper } from './use/usePopper';
+export { highlight, highlightLines, normalizeLang } from './codeBlock/highlighter';
+export { runRules, rulePresets } from './form/validate';
+export { renderMarkdown, stripMarkdown } from './chat/markdown';
+
 export default penguinUi

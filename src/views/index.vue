@@ -589,8 +589,25 @@ const activeCode = computed(() =>
   border-radius: 8px;
   background: var(--pui-bg-elevated);
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-  &::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--cat); }
-  &:hover { transform: translateY(-4px); box-shadow: var(--pui-shadow); border-color: var(--cat); }
+  // 顶部彩条：从圆角内侧起止，避免与 hover 时的边框线重合、也避免被裁圆角切掉
+  &::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: -1px;
+    height: 2px;
+    border-radius: 0 0 2px 2px;
+    background: var(--cat);
+    transition: left 0.22s ease, right 0.22s ease;
+  }
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--pui-shadow);
+    border-color: var(--cat);
+    // hover 时彩条铺满，与边框形成一个完整的彩色描边
+    &::before { left: -1px; right: -1px; border-radius: 8px 8px 0 0; }
+  }
   &__index {
     position: absolute; top: 22px; right: 24px;
     font-family: var(--pui-font-mono); font-size: 11px; letter-spacing: 0.08em;

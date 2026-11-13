@@ -5,7 +5,7 @@
     <t-image :src="pic2" width="120" height="120" fit="cover" :radius="20" :preview="false" />
 
     <t-image
-      src="/not-exist-image.png"
+      :src="brokenSrc"
       width="120"
       height="120"
       :preview="false"
@@ -22,6 +22,9 @@
 
 <script setup>
 import { pic1, pic2 } from './pics';
+
+// 故意非法的 data URI：触发 error 分支展示兜底，但不产生 404 网络请求
+const brokenSrc = 'data:image/png;base64,AAAA';
 </script>
 
 <style scoped>

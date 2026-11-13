@@ -10,7 +10,7 @@
   >
     <div v-if="$slots.avatar || avatar" class="pui-bubble__avatar">
       <slot name="avatar">
-        <t-avatar :src="avatar" :text="avatarText" :size="avatarSize" />
+        <t-avatar :src="avatarSrc" :text="avatarText" :size="avatarSize" />
       </slot>
     </div>
 
@@ -92,7 +92,25 @@ const bubbleStyle = computed(() => {
   return style;
 });
 
-const avatarText = computed(() => (props.name ? props.name.trim().charAt(0).toUpperCase() : ''));
+/**
+ * avatar 既可能是图片地址，也可能只是「文字头像」的一个字符。
+ * 之前直接丢给 t-avatar 的 src，单字符会被当成相对路径请求，
+ * 导致 /A、/D、/我 这类 404。这里用「是否像 URL」来区分。
+ */
+const avatarSrc = computed(() => {
+  const v = String(props.avatar || '').trim();
+  if (!v) return '';
+  // 单字符（含中文/emoji）一律视为文字头像
+  if ([...v].length <= 2 && !/[/.]/.test(v)) return '';
+  return v;
+});
+
+const avatarText = computed(() => {
+  // avatar 是字符时优先用它当头像文字，其次退回 name 首字母
+  const v = String(props.avatar || '').trim();
+  if (v && !avatarSrc.value && [...v].length <= 2) return v.toUpperCase();
+  return props.name ? props.name.trim().charAt(0).toUpperCase() : '';
+});
 </script>
 
 <style scoped lang="scss">

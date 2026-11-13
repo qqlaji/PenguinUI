@@ -205,8 +205,10 @@ const markList = computed(() => {
 });
 const marksStyle = (val) => {
   const p = pct(val);
+  // 横向：按百分比定位在轨道下方
+  // 竖向：容器已退化为 0 宽并贴在轨道右侧，标签只需按 bottom 定位，left 固定 0
   return props.vertical
-    ? { bottom: p + '%', left: '100%' }
+    ? { bottom: p + '%', left: '0' }
     : { left: p + '%', top: '100%' };
 };
 const isMarkActive = (val) => {
@@ -462,16 +464,25 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScrollHide, true));
   &:hover { color: var(--pui-brand, #0e80eb); }
 }
 .pui-slider--vertical .pui-slider__marks {
-  left: auto;
+  /*
+   * 竖排刻度：容器退化为 0 宽、定位在轨道右侧，
+   * 标签各自用 left:0 + translateY 只在纵向排列，横向统一从同一起点开始。
+   * 之前写 width:0 + left:auto 会让所有标签 left 计算成 0 而互相重叠。
+   */
+  left: 100%;
   right: auto;
   bottom: 0;
   top: 0;
   width: 0;
+  height: auto;
 }
 .pui-slider--vertical .pui-slider__mark {
+  /* 纵向对齐到刻度位置，横向从轨道右边缘起算（left 由 marksStyle 给 0） */
   transform: translateY(50%);
-  line-height: 1;
-  padding-left: 4px;
+  line-height: 1.2;
+  padding-left: 12px;
+  white-space: nowrap;
+  text-align: left;
 }
 
 .pui-slider__inputs {

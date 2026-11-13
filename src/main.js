@@ -26,6 +26,18 @@ import csharp from "highlight.js/lib/languages/csharp";
     ['json', json], ['python', python], ['java', java], ['sql', sql],
     ['http', http], ['go', go], ['cpp', cpp], ['csharp', csharp],
 ].forEach(([name, language]) => hljs.registerLanguage(name, language));
+
+/*
+ * 别名：demo 里大量用 ```vue，但 highlight.js 没有独立的 vue 语法，
+ * 官方做法是复用 xml（HTML）语法。不注册会一直警告并退回无高亮模式。
+ */
+['vue', 'html', 'svg'].forEach((alias) => hljs.registerLanguage(alias, xml));
+['js', 'jsx'].forEach((alias) => hljs.registerLanguage(alias, javascript));
+['ts', 'typescript'].forEach((alias) => hljs.registerLanguage(alias, javascript));
+['sh', 'shell'].forEach((alias) => hljs.registerLanguage(alias, bash));
+['py'].forEach((alias) => hljs.registerLanguage(alias, python));
+['scss', 'less'].forEach((alias) => hljs.registerLanguage(alias, css));
+
 hljs.configure({ ignoreUnescapedHTML: true });
 
 initTheme();

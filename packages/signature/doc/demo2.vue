@@ -2,7 +2,7 @@
   <div class="sg-demo2">
     <div class="sg-demo2__item">
       <t-signature
-        :width="300"
+        width="100%"
         :height="140"
         title="自定义笔色与粗细"
         pen-color="#0e80eb"
@@ -19,7 +19,7 @@
 
     <div class="sg-demo2__item">
       <t-signature
-        :width="300"
+        width="100%"
         :height="140"
         title="禁用状态"
         disabled
@@ -30,7 +30,7 @@
 
     <div class="sg-demo2__item">
       <t-signature
-        :width="300"
+        width="100%"
         :height="140"
         title="带浅底色的画布"
         bg-color="#f7f9fc"
@@ -46,7 +46,8 @@
 <style lang="scss" scoped>
 .sg-demo2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* 用 min() 让列宽不超过容器：内容区（卡片 - padding - border）始终够画布用 */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 20px;
 }
 .sg-demo2__item {
@@ -54,6 +55,9 @@
   border: 1px solid var(--pui-border, #e7ecf3);
   border-radius: 14px;
   background: var(--pui-bg-elevated, #fff);
+  /* 关键：网格项默认 min-width:auto 会被内容撑开，导致溢出 */
+  min-width: 0;
+  box-sizing: border-box;
 }
 .sg-demo2__hint {
   font-size: 12px;

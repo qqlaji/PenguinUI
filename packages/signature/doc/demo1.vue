@@ -3,7 +3,7 @@
     <t-signature
       ref="sigRef"
       title="签名区"
-      :width="520"
+      width="100%"
       :height="200"
       tip="鼠标或手指拖动书写"
       @change="onChange"

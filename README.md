@@ -17,7 +17,7 @@
 <br/>
 
 > **文档站：<https://qqlaji.github.io/PenguinUI/>**
-> 全部 82 个组件都有可运行示例、Props 表格与图标检索，支持 `Ctrl / ⌘ + K` 全站搜索与明暗主题切换。
+> 全部 87 个组件都有可运行示例、Props 表格与图标检索，支持 `Ctrl / ⌘ + K` 全站搜索与明暗主题切换。
 
 ## 安装
 
@@ -86,18 +86,43 @@ import type { ButtonProps } from 'penguinui'
 
 全部 230 枚图标见文档站「Icon 图标」页，支持分类筛选、中文关键词搜索、实时预览与点击复制类名 / 组件标签。
 
+## 组合式函数
+
+除了组件，还导出了几个可复用的逻辑：
+
+```js
+import { usePopper, useConfig, runRules, rulePresets, highlight } from 'penguinui';
+
+// 浮层定位：12 方向 / 自动翻转 / 视口钳制 / 跟随滚动
+const { visible, panelStyle, open, close, toggle } = usePopper({
+  triggerRef, panelRef, placement: 'bottom-start', offset: 8, matchTriggerWidth: true
+});
+
+// 独立跑校验规则（不依赖组件）
+const errors = await runRules(value, [rulePresets.phone()], formModel);
+```
+
+## 测试
+
+```bash
+npm test          # 运行全部单元测试（零依赖，用 node:test）
+npm run test:watch
+```
+
+覆盖表单校验规则、浮层定位算法、树形勾选联动、级联多选推导、语法高亮器，共 135 个用例。
+
 ## 组件一览
 
-> 共 82 个组件（不含「安装使用」「颜色」这两个纯文档页），全部在文档站有可运行示例与 Props 表格。
+> 共 87 个组件（不含「安装使用」「颜色」这两个纯文档页），全部在文档站有可运行示例与 Props 表格。
 
 | 分类 | 组件 |
 | --- | --- |
 | 常规 | Layout、ConfigProvider、Typography、PageHeader、Scrollbar、Color、Icon |
-| 通用 | Button、FloatButton、Input、AutoComplete、Mentions、Textarea、Space、Select、TreeSelect、Transfer、Dropdown、Radio、Checkbox、Switch、OptFile、ColorPicker、Rate、Form、InputNumber、Slider、Upload、InputOTP、Flex、Splitter |
-| 数据 | Badge、Table（支持排序 / 筛选 / 行选择 / 分页）、Pagination、Date、DatePicker、Tree、Menu、Tabs、Progress、Breadcrumb、Steps、Timeline、TimePicker、Cascader、Statistic、Countdown、VirtualList、Calendar、Descriptions |
+| 通用 | Button、FloatButton、Input、AutoComplete、Mentions、Textarea、Space、Select、TreeSelect、Transfer、Dropdown、Radio、Checkbox、Switch、OptFile、ColorPicker、Rate、Form、InputNumber、Slider、Upload、InputOTP、Flex、Splitter、**Resizable**（含组合伸缩）、**DragMove** |
+| 数据 | Badge、Table（支持排序 / 筛选 / 行选择 / 分页）、Pagination、Date、DatePicker、**Tree**（勾选联动 / 搜索 / 异步加载）、Menu、Tabs、Progress、Breadcrumb、Steps、Timeline、TimePicker、Cascader（多选 / 搜索 / 异步）、Statistic、Countdown、VirtualList、Calendar、Descriptions |
 | 交互 | Message、Popover、Confirm、Modal、Drawer、Loading、Backtop、Popconfirm、Affix、Anchor、Tour |
 | 展示 | Card、Collapse、Avatar、Tag、Empty、Skeleton、Carousel、Image、ImageViewer、Segmented、List、Comment、Bubble、Signature、QRCode、Watermark |
-| 代码 | CodeBlock（零依赖语法高亮） |
+| 代码 | CodeBlock（零依赖语法高亮）、**Chat**（Markdown / 流式输出）、**AudioPlayer**、**VideoPlayer** |
 | 反馈 | Alert、Tooltip、Notification、Result |
 | 其他 | Divider |
 

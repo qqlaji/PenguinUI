@@ -424,6 +424,66 @@ h6 {
   }
 }
 
+/* ===========================================================================
+   文档内嵌组件的通用外壳
+   ---------------------------------------------------------------------------
+   文档里的 Attributes / Events 表格、代码块、示例块，都是直接写在 markdown 里的
+   自定义组件（t-table / t-code-block）。它们没有外层留白，会和正文容器左右贴边，
+   看起来像被切掉一块。这里统一给它们加一段呼吸空间，而不是逐个页面去改 demo。
+
+   注意：表格内部是 width:100%，如果只加 margin 会超出容器（100% + margin）。
+   所以用 box-sizing + calc 把宽度扣掉两侧间距。
+   =========================================================================== */
+.markdown-body {
+  // 表格类：单独占一块，左右留出呼吸空间
+  // 组件内部 `.penguin-table-default { width: 100% }` 带 scoped 属性选择器，
+  // 特异性高于普通类，所以要写得更具体才能覆盖。
+  > .pui-table,
+  > .penguin-table-default,
+  > .penguin-table-small {
+    &,
+    &.pui-table,
+    &.penguin-table-default,
+    &.penguin-table-small {
+      box-sizing: border-box;
+      width: calc(100% - 8px);
+      margin: 4px 4px 20px;
+    }
+  }
+
+  // 代码块
+  > .pui-code {
+    box-sizing: border-box;
+    width: calc(100% - 8px);
+    margin: 4px 4px 20px;
+  }
+
+  // 若 t-table 被包在普通 div 里（部分老页面），也一并兜住
+  > div > .pui-table:only-child {
+    box-sizing: border-box;
+    width: calc(100% - 8px);
+    margin: 4px 4px 20px;
+  }
+}
+
+/* 表格内部：首列/末列与描边留出内距，避免文字顶着边框 */
+.markdown-body .pui-table {
+  .penguin-table-default tbody td,
+  .penguin-table-small tbody td,
+  .penguin-table-default thead th,
+  .penguin-table-small thead th {
+    // 保持组件默认 padding，这里只确保不会被 text-align:center 撑成贴边
+    box-sizing: border-box;
+  }
+
+  // 表格自身的圆角与阴影，让它从正文里"立"出来一点
+  .penguin-table-default table,
+  .penguin-table-small table {
+    border-radius: var(--pui-radius-md);
+    overflow: hidden;
+  }
+}
+
 // ---------------- 滚动条 ----------------
 .penguinuirightView::-webkit-scrollbar,
 .pre-code-box pre::-webkit-scrollbar,

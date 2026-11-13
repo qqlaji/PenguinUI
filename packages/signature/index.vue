@@ -1,5 +1,5 @@
 <template>
-  <div :class="['pui-signature', customClass, { 'is-disabled': disabled }]" :style="{ width: toPx(width) }">
+  <div :class="['pui-signature', customClass, { 'is-disabled': disabled, 'is-fluid': isFluidWidth }]" :style="{ width: rootWidthStyle }">
     <div class="pui-signature__hd" v-if="title || showTools">
       <span v-if="title" class="pui-signature__title">{{ title }}</span>
       <div v-if="showTools" class="pui-signature__tools">
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const props = defineProps({
   /** 画布宽度 */
@@ -110,27 +110,62 @@ const toPx = (v) => {
   return /^\d+(\.\d+)?$/.test(s) ? `${s}px` : s;
 };
 
+/* width / height 解析结果 */
+const widthSpec = computed(() => parseLen(props.width, 480));
+const heightSpec = computed(() => parseLen(props.height, 200));
+
+/** 是否宽度自适应容器 */
+const isFluidWidth = computed(() => widthSpec.value.unit === '%' || widthSpec.value.unit === 'auto');
+
+/** 容器实测宽度（自适应模式下由 ResizeObserver 回填） */
+const measuredWidth = ref(0);
+
+/** 最终用于 canvas 的 CSS 宽度 */
 const cssW = computed(() => {
-  const v = props.width;
-  return typeof v === 'number' ? v : parseFloat(v) || 480;
+  if (!isFluidWidth.value) return widthSpec.value.value;
+  if (measuredWidth.value > 0) return measuredWidth.value;
+  // 首帧还没测量到之前用 480 兜底，避免 canvas 宽度为 0 导致画不出来
+  return 480;
 });
 
-const cssH = computed(() => {
-  const v = props.height;
-  return typeof v === 'number' ? v : parseFloat(v) || 200;
+const cssH = computed(() => (heightSpec.value.unit === 'px' ? heightSpec.value.value : 200));
+
+/** 根节点宽度：固定像素时锁死，自适应时撑满容器 */
+const rootWidthStyle = computed(() => {
+  if (isFluidWidth.value) return '100%';
+  return `${widthSpec.value.value}px`;
 });
+
+/**
+ * 解析长度值：数字按 px，百分比 / auto 交给容器测量
+ * 返回 { value, unit }，unit 为 'px' | '%' | 'auto'
+ */
+const parseLen = (v, fallback) => {
+  if (v === '' || v === null || v === undefined) return { value: fallback, unit: 'px' };
+  if (typeof v === 'number') return { value: v, unit: 'px' };
+  const s = String(v).trim();
+  if (s === 'auto' || s === '100%') return { value: toNumber(s), unit: s === '100%' ? '%' : 'auto' };
+  if (s.endsWith('%')) return { value: parseFloat(s) || 100, unit: '%' };
+  const n = parseFloat(s);
+  return { value: isNaN(n) ? fallback : n, unit: 'px' };
+};
+
+const toNumber = (v) => parseFloat(String(v)) || 100;
 
 /* ---------------- 初始化 ---------------- */
 function setupCanvas() {
   const canvas = canvasRef.value;
   if (!canvas) return;
 
+  const w = Math.max(1, Math.round(cssW.value));
+  const h = Math.max(1, Math.round(cssH.value));
+
   dpr = window.devicePixelRatio || 1;
   // 物理像素 = CSS 像素 × dpr，避免高分屏笔迹发虚
-  canvas.width = Math.round(cssW.value * dpr);
-  canvas.height = Math.round(cssH.value * dpr);
-  canvas.style.width = `${cssW.value}px`;
-  canvas.style.height = `${cssH.value}px`;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
 
   ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
@@ -286,22 +321,65 @@ function loadImage(src) {
 
 let ro = null;
 
-onMounted(() => {
+/** 记录上一次的渲染尺寸，尺寸没变就不重绘画布，避免滚动时闪烁 */
+let lastSize = { w: 0, h: 0 };
+
+function redrawWithSize() {
+  const w = Math.round(cssW.value);
+  const h = Math.round(cssH.value);
+  if (w === lastSize.w && h === lastSize.h) return;
+
+  // 尺寸变化会重置画布，先备份再恢复
+  const snap = hasInk.value ? snapshot() : null;
   setupCanvas();
+  lastSize = { w, h };
+
+  if (snap) {
+    const img = new Image();
+    img.onload = () => ctx.drawImage(img, 0, 0, w, h);
+    img.src = snap;
+  }
+}
+
+/** 测量容器宽度（自适应模式才有意义） */
+function measureWidth() {
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+  const wrap = canvas.parentElement;
+  if (!wrap) return;
+
+  // 父级宽度已扣掉 padding / border，可直接作为画布宽度
+  const w = Math.floor(wrap.clientWidth);
+  if (w > 0 && w !== measuredWidth.value) {
+    measuredWidth.value = w;
+  }
+}
+
+onMounted(async () => {
+  measureWidth();
+  setupCanvas();
+  lastSize = { w: Math.round(cssW.value), h: Math.round(cssH.value) };
+
   if (typeof ResizeObserver !== 'undefined') {
     ro = new ResizeObserver(() => {
-      // 尺寸变化会重置画布，先备份再恢复
-      const snap = hasInk.value ? snapshot() : null;
-      setupCanvas();
-      if (snap) {
-        const img = new Image();
-        img.onload = () => ctx.drawImage(img, 0, 0, cssW.value, cssH.value);
-        img.src = snap;
-      }
+      measureWidth();
+      redrawWithSize();
     });
-    if (canvasRef.value) ro.observe(canvasRef.value.parentElement || canvasRef.value);
+    if (canvasRef.value && canvasRef.value.parentElement) {
+      ro.observe(canvasRef.value.parentElement);
+    }
   }
 });
+
+// 外部直接改 width / height 时同步重建
+watch(
+  () => [props.width, props.height],
+  async () => {
+    await nextTick();
+    measureWidth();
+    redrawWithSize();
+  }
+);
 
 onBeforeUnmount(() => {
   if (ro) ro.disconnect();
@@ -316,6 +394,20 @@ defineExpose({ clear, undo, toDataURL, download, loadImage, hasInk });
   flex-direction: column;
   gap: 8px;
   box-sizing: border-box;
+  /* 固定像素时不允许被 flex 容器压缩，否则画布会被裁 */
+  flex: none;
+  max-width: 100%;
+
+  /* 自适应容器：撑满父级，画布随容器宽度重算 */
+  &.is-fluid {
+    width: 100%;
+    min-width: 0;
+
+    .pui-signature__canvas-wrap {
+      width: 100%;
+      min-width: 0;
+    }
+  }
 
   &__hd {
     display: flex;
@@ -368,6 +460,9 @@ defineExpose({ clear, undo, toDataURL, download, loadImage, hasInk });
     overflow: hidden;
     background: var(--pui-bg-elevated, #fff);
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    /* canvas 是定宽块级元素，容器必须裁掉溢出，否则会撑破父级 */
+    max-width: 100%;
+    box-sizing: border-box;
 
     &:hover {
       border-color: var(--pui-brand, #0e80eb);

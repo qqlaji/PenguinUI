@@ -51,16 +51,31 @@
 
           <!-- 数值区 -->
           <div class="pui-cp-body">
-            <span class="pui-cp-preview" :style="{ background: previewColor }"></span>
+            <span class="pui-cp-preview pui-cp-checker" :style="{ '--color': previewColor }"></span>
             <input
               v-model="hexInput"
               class="pui-cp-hex"
               type="text"
               spellcheck="false"
+              :placeholder="hexPlaceholder"
               @keydown.enter.prevent="commitHex"
               @blur="commitHex"
             />
-            <span v-if="showAlpha" class="pui-cp-alpha-text">{{ Math.round(alpha * 100) }}%</span>
+            <!-- 透明度数值可直接输入 -->
+            <label v-if="showAlpha" class="pui-cp-alpha-field">
+              <input
+                v-model.number="alphaInput"
+                class="pui-cp-alpha-input"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                aria-label="透明度百分比"
+                @keydown.enter.prevent="commitAlpha"
+                @blur="commitAlpha"
+              />
+              <span class="pui-cp-alpha-unit">%</span>
+            </label>
           </div>
 
           <!-- 预设色板 -->
@@ -68,9 +83,9 @@
             <span
               v-for="c in predefine"
               :key="c"
-              class="pui-cp-presets__item"
+              class="pui-cp-presets__item pui-cp-checker"
               :class="{ 'is-active': normalize(c) === normalize(modelValue) }"
-              :style="{ background: c }"
+              :style="{ '--color': c }"
               :title="c"
               @click="pickPreset(c)"
             ></span>
@@ -227,6 +242,26 @@ const alphaBar = computed(
   () => `linear-gradient(to right, transparent, ${currentHex.value})`
 );
 
+/** 透明度百分比输入框的显示值，跟随滑块变化 */
+const alphaInput = ref(Math.round(alpha.value * 100));
+watch(alpha, (a) => {
+  const pct = Math.round(a * 100);
+  if (alphaInput.value !== pct) alphaInput.value = pct;
+});
+
+/** 输入框占位：开启透明度时提示支持 8 位 hex */
+const hexPlaceholder = computed(() => (props.showAlpha ? '#RRGGBBAA' : '#RRGGBB'));
+
+/** 提交透明度输入框：非法值回退到当前值 */
+const commitAlpha = () => {
+  let pct = Number(alphaInput.value);
+  if (!Number.isFinite(pct)) pct = Math.round(alpha.value * 100);
+  pct = clamp(pct, 0, 100);
+  alphaInput.value = Math.round(pct);
+  alpha.value = pct / 100;
+  emitValue(props.showAlpha ? previewColor.value : hexInput.value);
+};
+
 /* ---------------- 定位 ---------------- */
 const rootRef = ref(null);
 const panelRef = ref(null);
@@ -378,6 +413,13 @@ const commitHex = () => {
   }
   const next = rgbToHsv(rgb);
   hsv.value = { h: next.s === 0 ? hsv.value.h : next.h, s: next.s, v: next.v };
+
+  // 支持 #RRGGBBAA：输入里带 alpha 时同步到透明度滑块
+  if (props.showAlpha && typeof rgb.a === 'number' && rgb.a >= 0) {
+    alpha.value = clamp(rgb.a, 0, 1);
+    alphaInput.value = Math.round(alpha.value * 100);
+  }
+
   hexInput.value = rgbToHex(rgb);
   emitValue(props.showAlpha ? previewColor.value : hexInput.value);
 };
@@ -387,9 +429,11 @@ const pickPreset = (c) => {
   if (!rgb) return;
   const next = rgbToHsv(rgb);
   hsv.value = next;
-  alpha.value = 1;
+  // 预设色本身若带透明度（rgba / hex8），沿用它的 alpha
+  alpha.value = props.showAlpha && typeof rgb.a === 'number' ? clamp(rgb.a, 0, 1) : 1;
+  alphaInput.value = Math.round(alpha.value * 100);
   hexInput.value = rgbToHex(rgb);
-  emitValue(rgbToHex(rgb));
+  emitValue(props.showAlpha ? previewColor.value : rgbToHex(rgb));
   if (props.autoClose) close();
 };
 
@@ -587,12 +631,85 @@ defineExpose({ open, close, toggle });
   margin-top: 14px;
 }
 
+/* ---------------------------------------------------------------------------
+   棋盘格底色
+   ---------------------------------------------------------------------------
+   半透明颜色必须叠在棋盘格上才能看出透明度。之前预览块与预设色块都是直接
+   铺纯色，rgba(…,0.3) 看起来和实色一样，用户会误以为透明度没生效。
+   用两层 linear-gradient 拼出 8px 的格子，再叠一层从 --color 取色的实心层。
+   --------------------------------------------------------------------------- */
+.pui-cp-checker {
+  position: relative;
+  overflow: hidden;
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #d9dee7 25%, transparent 25%, transparent 75%, #d9dee7 75%),
+    linear-gradient(45deg, #d9dee7 25%, transparent 25%, transparent 75%, #d9dee7 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+
+  /* 颜色层叠在棋盘格之上 */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color, transparent);
+    border-radius: inherit;
+  }
+}
+
 .pui-cp-preview {
   flex: none;
   width: 28px;
   height: 28px;
   border-radius: 8px;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+/* 透明度数值输入 */
+.pui-cp-alpha-field {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  height: 28px;
+  padding: 0 7px;
+  border: 1px solid var(--pui-border, #e3e9f2);
+  border-radius: 8px;
+  background: var(--pui-bg-soft, #f7f9fc);
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: var(--pui-brand, #0e80eb);
+    background: var(--pui-bg-elevated, #fff);
+  }
+}
+
+.pui-cp-alpha-input {
+  width: 30px;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: var(--pui-text, #1c2534);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+
+  /* 去掉数字输入框的上下箭头 */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.pui-cp-alpha-unit {
+  font-size: 11.5px;
+  color: var(--pui-text-muted, #8b96a6);
 }
 
 .pui-cp-hex {
@@ -625,9 +742,12 @@ defineExpose({ open, close, toggle });
 
 .pui-cp-presets {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  /* 列数跟随色块数量，最多 12 列；固定 12 列会在色块较少时留出大量空位 */
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
   gap: 5px;
   margin-top: 14px;
+  /* 给 hover 放大留出空间，避免被面板边缘裁切 */
+  padding: 2px;
 }
 
 .pui-cp-presets__item {
@@ -635,7 +755,9 @@ defineExpose({ open, close, toggle });
   aspect-ratio: 1 / 1;
   border-radius: 5px;
   cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  /* 描边用 outline 而不是 inset box-shadow，避免被棋盘格的 ::after 盖住 */
+  outline: 1px solid rgba(0, 0, 0, 0.08);
+  outline-offset: -1px;
   transition: transform 0.14s ease, box-shadow 0.14s ease;
 
   &:hover { transform: scale(1.18); }

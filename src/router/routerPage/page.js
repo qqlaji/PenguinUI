@@ -277,7 +277,7 @@ export default [
             },
             {
                 path: 'carousel',
-                name: 'Carousel 走马灯',
+                name: 'Carousel 轮播图',
                 component: () => import('/packages/carousel/doc/doc.md')
             },
             {
@@ -339,6 +339,31 @@ export default [
                 path: 'splitter',
                 name: 'Splitter 分隔面板',
                 component: () => import('/packages/splitter/doc/doc.md')
+            },
+            {
+                path: 'resizable',
+                name: 'Resizable 伸缩框',
+                component: () => import('/packages/resizable/doc/doc.md')
+            },
+            {
+                path: 'dragMove',
+                name: 'DragMove 拖拽移动',
+                component: () => import('/packages/dragMove/doc/doc.md')
+            },
+            {
+                path: 'audioPlayer',
+                name: 'AudioPlayer 音频播放器',
+                component: () => import('/packages/audioPlayer/doc/doc.md')
+            },
+            {
+                path: 'videoPlayer',
+                name: 'VideoPlayer 视频播放器',
+                component: () => import('/packages/videoPlayer/doc/doc.md')
+            },
+            {
+                path: 'chat',
+                name: 'Chat 对话',
+                component: () => import('/packages/chat/doc/doc.md')
             },
             {
                 path: 'list',

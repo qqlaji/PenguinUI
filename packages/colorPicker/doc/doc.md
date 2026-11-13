@@ -1,6 +1,7 @@
 <script setup>
 import demo1 from './demo1.vue'
 import demo2 from './demo2.vue'
+import demo3 from './demo3.vue'
 import Attributes from './Attributes.vue'
 import Event from './Events.vue'
 import preview from '@/components/preview.vue'
@@ -29,6 +30,15 @@ import preview from '@/components/preview.vue'
   <demo2/>
 </div>
 <preview compname="colorPicker" demoname="demo2"/>
+
+## 透明度
+
+#### 开启 _show-alpha_ 后可用滑条或百分比输入框调整透明度，色块会显示棋盘格底纹；HEX 输入支持 8 位 `#RRGGBBAA`。
+
+<div class="componetnsBox">
+  <demo3/>
+</div>
+<preview compname="colorPicker" demoname="demo3"/>
 
 ## Attributes 参数
 

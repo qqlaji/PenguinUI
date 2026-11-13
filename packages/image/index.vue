@@ -3,6 +3,7 @@
     class="pui-image"
     :class="{ 'is-round': round, 'is-loading': loading, 'is-error': hasError }"
     :style="rootStyle"
+    @click="onRootClick"
   >
     <img
       v-if="!hasError"
@@ -37,78 +38,77 @@
         <span>预览</span>
       </slot>
     </div>
-  </div>
-
-  <Teleport to="body">
-    <Transition name="pui-image-fade">
-      <div
-        v-if="viewerVisible"
-        class="pui-image-viewer"
-        :style="{ zIndex }"
-        role="dialog"
-        aria-modal="true"
-        aria-label="图片预览"
-        @click.self="onMaskClick"
-      >
-        <div class="pui-image-viewer__mask"></div>
-
-        <img
-          class="pui-image-viewer__img"
-          :class="{ 'is-dragging': dragging }"
-          :src="currentSrc"
-          :alt="alt"
-          :style="imgTransform"
-          @click.stop
-          @pointerdown="onDragStart"
-          @wheel.prevent="onWheel"
-        />
-
-        <button type="button" class="pui-image-viewer__close" aria-label="关闭" @click="closeViewer">
-          <i class="t-icon-close"></i>
-        </button>
-
-        <button
-          v-if="srcList.length > 1"
-          type="button"
-          class="pui-image-viewer__switch pui-image-viewer__switch--prev"
-          aria-label="上一张"
-          @click.stop="switchTo(-1)"
+    <Teleport v-if="viewerVisible" to="body">
+      <Transition name="pui-image-fade">
+        <div
+          v-if="viewerVisible"
+          class="pui-image-viewer"
+          :style="{ zIndex }"
+          role="dialog"
+          aria-modal="true"
+          aria-label="图片预览"
+          @click.self="onMaskClick"
         >
-          <i class="t-icon-arrow-left-filling"></i>
-        </button>
-        <button
-          v-if="srcList.length > 1"
-          type="button"
-          class="pui-image-viewer__switch pui-image-viewer__switch--next"
-          aria-label="下一张"
-          @click.stop="switchTo(1)"
-        >
-          <i class="t-icon-arrow-right-filling"></i>
-        </button>
+          <div class="pui-image-viewer__mask"></div>
 
-        <div class="pui-image-viewer__toolbar" @click.stop>
-          <button type="button" aria-label="缩小" @click="zoomBy(-0.25)">
-            <i class="t-icon-zoom-out"></i>
+          <img
+            class="pui-image-viewer__img"
+            :class="{ 'is-dragging': dragging }"
+            :src="currentSrc"
+            :alt="alt"
+            :style="imgTransform"
+            @click.stop
+            @pointerdown="onDragStart"
+            @wheel.prevent="onWheel"
+          />
+
+          <button type="button" class="pui-image-viewer__close" aria-label="关闭" @click="closeViewer">
+            <i class="t-icon-close"></i>
           </button>
-          <span class="pui-image-viewer__scale">{{ Math.round(scale * 100) }}%</span>
-          <button type="button" aria-label="放大" @click="zoomBy(0.25)">
-            <i class="t-icon-zoom-in"></i>
+
+          <button
+            v-if="srcList.length > 1"
+            type="button"
+            class="pui-image-viewer__switch pui-image-viewer__switch--prev"
+            aria-label="上一张"
+            @click.stop="switchTo(-1)"
+          >
+            <i class="t-icon-arrow-left-filling"></i>
           </button>
-          <span class="pui-image-viewer__divider"></span>
-          <button type="button" aria-label="左转" @click="rotateBy(-90)">
-            <i class="t-icon-refresh"></i>
+          <button
+            v-if="srcList.length > 1"
+            type="button"
+            class="pui-image-viewer__switch pui-image-viewer__switch--next"
+            aria-label="下一张"
+            @click.stop="switchTo(1)"
+          >
+            <i class="t-icon-arrow-right-filling"></i>
           </button>
-          <button type="button" aria-label="右转" @click="rotateBy(90)">
-            <i class="t-icon-refresh pui-icon-flip"></i>
-          </button>
-          <span class="pui-image-viewer__divider"></span>
-          <button type="button" aria-label="重置" @click="reset">
-            <i class="t-icon-fullscreen-shrink"></i>
-          </button>
+
+          <div class="pui-image-viewer__toolbar" @click.stop>
+            <button type="button" aria-label="缩小" @click="zoomBy(-0.25)">
+              <i class="t-icon-zoom-out"></i>
+            </button>
+            <span class="pui-image-viewer__scale">{{ Math.round(scale * 100) }}%</span>
+            <button type="button" aria-label="放大" @click="zoomBy(0.25)">
+              <i class="t-icon-zoom-in"></i>
+            </button>
+            <span class="pui-image-viewer__divider"></span>
+            <button type="button" aria-label="左转" @click="rotateBy(-90)">
+              <i class="t-icon-refresh"></i>
+            </button>
+            <button type="button" aria-label="右转" @click="rotateBy(90)">
+              <i class="t-icon-refresh pui-icon-flip"></i>
+            </button>
+            <span class="pui-image-viewer__divider"></span>
+            <button type="button" aria-label="重置" @click="reset">
+              <i class="t-icon-fullscreen-shrink"></i>
+            </button>
+          </div>
         </div>
-      </div>
-    </Transition>
-  </Teleport>
+      </Transition>
+    </Teleport>
+  </div>
 </template>
 
 <script>
@@ -142,7 +142,7 @@ const props = defineProps({
   closeOnClickMask: { type: Boolean, default: true }
 });
 
-const emit = defineEmits(['load', 'error', 'viewer-open', 'viewer-close', 'switch']);
+const emit = defineEmits(['load', 'error', 'viewer-open', 'viewer-close', 'switch', 'click']);
 
 /* ---------- 基础状态 ---------- */
 const loading = ref(true);
@@ -210,6 +210,11 @@ function reset() {
   rotate.value = 0;
   offsetX.value = 0;
   offsetY.value = 0;
+}
+
+/** 根节点点击：转发给使用方（未开启预览时可当普通图片点击） */
+function onRootClick(e) {
+  emit('click', e);
 }
 
 function openViewer() {

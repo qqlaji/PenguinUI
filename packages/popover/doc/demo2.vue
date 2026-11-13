@@ -4,7 +4,7 @@
     trigger="click"
     placement="right"
     width="600"
-    @after-enter="AfterEneter"
+    @after-enter="onAfterEnter"
   >
     <div style="width:800px">
       <t-table :options="options" size="default">
@@ -121,6 +121,10 @@ const state = reactive({
 });
 const dropchange1 = (item, index) => {
   console.log(item, index);
+};
+/** 浮层入场动画结束回调 */
+const onAfterEnter = () => {
+  console.log('popover after-enter');
 };
 const { dorpoptions1,options } = state;
 </script>

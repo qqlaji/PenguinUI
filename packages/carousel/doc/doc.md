@@ -2,11 +2,12 @@
 import demo1 from './demo1.vue'
 import demo2 from './demo2.vue'
 import demo3 from './demo3.vue'
+import demo4 from './demo4.vue'
 import Attributes from './Attributes.vue'
 import preview from '@/components/preview.vue'
 </script>
 
-# Carousel 走马灯
+# Carousel 轮播图
 #### 多张内容循环切换的展示组件，支持自动播放、箭头与指示器显隐控制，常用于 Banner 与通知墙。
 
 <br />
@@ -40,6 +41,15 @@ import preview from '@/components/preview.vue'
 <preview compname="carousel" demoname="demo3"/>
 
 <br />
+
+## 指示器类型
+
+#### `indicator-type` 提供四种形态，其中 `progress` 会在激活项上显示一条随时间填满的进度条，可直接看出当前这屏还剩多久切走。
+
+<div class="componetnsBox">
+  <demo4/>
+</div>
+<preview compname="carousel" demoname="demo4"/>
 
 ## Carousel Attributes
 

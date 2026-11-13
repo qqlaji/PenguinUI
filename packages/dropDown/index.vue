@@ -32,11 +32,18 @@
           class="pui-dropdown__panel"
           :style="panelStyle"
           role="menu"
+          @mouseenter="onPanelEnter"
+          @mouseleave="onPanelLeave"
         >
           <ul class="pui-dropdown__list">
             <template v-for="(item, index) in normalized" :key="index">
               <li v-if="item.divided" class="pui-dropdown__divider" role="separator"></li>
+              <!--
+                纯分隔符项（只写了 divided: true、没有 label/value）不再渲染成菜单项，
+                否则会多出一个只占高度、没有内容的空白行
+              -->
               <li
+                v-else
                 :class="[
                   'pui-dropdown__item',
                   {
@@ -74,6 +81,7 @@ export default {
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
+import { usePopper } from '../use/usePopper';
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -86,6 +94,8 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
   hideOnClick: { type: Boolean, default: true },
   maxHeight: { type: [Number, String], default: 260 },
+  /** hover 模式下移出后延迟关闭（ms），给鼠标跨过间隙挪到面板的时间 */
+  hoverCloseDelay: { type: Number, default: 120 },
   modelValue: { type: [String, Number], default: undefined }
 });
 
@@ -94,8 +104,6 @@ const emit = defineEmits(['change', 'visible-change', 'update:modelValue']);
 const triggerRef = ref(null);
 const btnRef = ref(null);
 const panelRef = ref(null);
-const visible = ref(false);
-const pos = ref({ top: 0, left: 0, minWidth: 0 });
 
 const normalized = computed(() =>
   (props.options || []).map((item) => {
@@ -104,85 +112,102 @@ const normalized = computed(() =>
   })
 );
 
-const toPx = (v) => (typeof v === 'number' || /^\d+(\.\d+)?$/.test(String(v)) ? `${parseFloat(v)}px` : v);
+const toPx = (v) => {
+  if (typeof v === 'number') return `${v}px`;
+  const s = String(v).trim();
+  return /^\d+(\.\d+)?$/.test(s) ? `${s}px` : s;
+};
 
+/* ---------------- 定位（统一走 usePopper） ---------------- */
+// 兼容旧 placement 命名：bottom / bottom-start / bottom-end
+const normalizedPlacement = computed(() => {
+  const map = {
+    'bottom-start': 'bottom-start',
+    bottom: 'bottom-center',
+    'bottom-end': 'bottom-end',
+    'top-start': 'top-start',
+    top: 'top-center',
+    'top-end': 'top-end',
+    'right-start': 'right-start',
+    left: 'left-center',
+    right: 'right-center'
+  };
+  return map[props.placement] || 'bottom-start';
+});
+
+const {
+  visible,
+  panelStyle: popperStyle,
+  open: popperOpen,
+  close: popperClose,
+  toggle: popperToggle
+} = usePopper({
+  triggerRef: btnRef,
+  panelRef,
+  placement: normalizedPlacement.value,
+  offset: 8,
+  matchTriggerWidth: true,
+  disabled: computed(() => props.disabled)
+});
+
+/** 加上最大高度限制 */
 const panelStyle = computed(() => ({
-  top: `${pos.value.top}px`,
-  left: `${pos.value.left}px`,
-  minWidth: `${pos.value.minWidth}px`,
+  ...popperStyle.value,
   maxHeight: toPx(props.maxHeight)
 }));
 
-/* ---------------- 定位 ---------------- */
-const PANEL_GAP = 8;
-
-const updatePosition = () => {
-  const btn = btnRef.value;
-  if (!btn) return;
-  const r = btn.getBoundingClientRect();
-  const panel = panelRef.value;
-  const pw = panel ? panel.offsetWidth : r.width;
-  const ph = panel ? panel.offsetHeight : 0;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  let left = r.left;
-  if (props.placement === 'bottom') left = r.left + r.width / 2 - pw / 2;
-  if (props.placement === 'bottom-end') left = r.right - pw;
-
-  // 视口水平钳制
-  const margin = 8;
-  left = Math.max(margin, Math.min(left, vw - pw - margin));
-
-  // 下方空间不足则翻到上方
-  let top = r.bottom + PANEL_GAP;
-  if (ph && top + ph > vh - margin && r.top - PANEL_GAP - ph > margin) {
-    top = r.top - PANEL_GAP - ph;
-  }
-
-  pos.value = { top, left, minWidth: r.width };
-};
-
-const onScroll = () => { if (visible.value) updatePosition(); };
-const onResize = () => { if (visible.value) updatePosition(); };
-
-const bindGlobal = () => {
-  window.addEventListener('scroll', onScroll, true);
-  window.addEventListener('resize', onResize);
-  document.addEventListener('click', onDocumentClick, true);
-};
-const unbindGlobal = () => {
-  window.removeEventListener('scroll', onScroll, true);
-  window.removeEventListener('resize', onResize);
-  document.removeEventListener('click', onDocumentClick, true);
-};
-
-function onDocumentClick(e) {
-  const t = e.target;
-  if (triggerRef.value && triggerRef.value.contains(t)) return;
-  if (panelRef.value && panelRef.value.contains(t)) return;
-  close();
-}
-
 /* ---------------- 开合 ---------------- */
+/** hover 模式下用延时关闭，给鼠标从触发器挪到面板留出时间（面板 teleport 到 body，两者不是父子关系） */
+let closeTimer = null;
+
+const cancelClose = () => {
+  if (closeTimer) {
+    clearTimeout(closeTimer);
+    closeTimer = null;
+  }
+};
+
+const scheduleClose = () => {
+  if (props.trigger !== 'hover') return;
+  cancelClose();
+  closeTimer = setTimeout(() => {
+    closeTimer = null;
+    close();
+  }, props.hoverCloseDelay);
+};
+
 const open = async () => {
   if (props.disabled || visible.value) return;
-  visible.value = true;
-  await nextTick();
-  updatePosition();
-  bindGlobal();
+  cancelClose();
+  await popperOpen();
   emit('visible-change', true);
 };
 const close = () => {
+  cancelClose();
   if (!visible.value) return;
-  visible.value = false;
-  unbindGlobal();
+  popperClose();
   emit('visible-change', false);
 };
 const toggle = () => (visible.value ? close() : open());
 
-const onEnter = () => { if (props.trigger === 'hover') open(); };
-const onLeave = () => { if (props.trigger === 'hover') close(); };
+const onEnter = () => {
+  if (props.trigger === 'hover') {
+    cancelClose();
+    open();
+  }
+};
+const onLeave = () => {
+  if (props.trigger === 'hover') scheduleClose();
+};
+
+/** 鼠标移入面板时取消关闭（配合 teleport 的分离 DOM） */
+const onPanelEnter = () => {
+  if (props.trigger === 'hover') cancelClose();
+};
+const onPanelLeave = () => {
+  if (props.trigger === 'hover') scheduleClose();
+};
+
 const onTriggerClick = () => { if (props.trigger === 'click') toggle(); };
 
 /* ---------------- 选择 ---------------- */
@@ -223,7 +248,10 @@ const onKeydown = (e) => {
 };
 
 watch(() => props.disabled, (v) => { if (v) close(); });
-onBeforeUnmount(unbindGlobal);
+onBeforeUnmount(() => {
+  // 全局监听由 usePopper 自行清理，这里只需清掉 hover 延时
+  cancelClose();
+});
 
 defineExpose({ open, close, toggle });
 </script>
@@ -347,8 +375,9 @@ defineExpose({ open, close, toggle });
 .pui-dropdown__item {
   display: flex;
   align-items: center;
-  justify-content: center; /* 文本居中 */
-  gap: 8px;
+  /* 菜单项左对齐才是列表的正常阅读方式；居中会让不同长度的项参差不齐 */
+  justify-content: flex-start;
+  gap: 10px;
   padding: 9px 12px;
   border-radius: 8px;
   color: var(--pui-text-2, #4a5866);
@@ -394,7 +423,7 @@ defineExpose({ open, close, toggle });
 
 .pui-dropdown__item-label {
   display: inline-block;
-  text-align: center;
+  text-align: left;
 }
 
 .pui-dropdown__divider {

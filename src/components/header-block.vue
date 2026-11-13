@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import pkg from '../../package.json';
 import BrandMark from './brand-mark.vue';
@@ -75,10 +75,14 @@ const syncActive = (path) => {
   else if (path.endsWith('/install')) active.value = 'guide';
   else active.value = 'components';
 };
-onMounted(() => syncActive(route.path));
+
+// 必须跟随路由变化：只在 onMounted 同步一次的话，
+// 刷新页面时那一刻 route.path 还是初始值 '/'，会错误地高亮"首页"
+watch(() => route.path, (p) => syncActive(p), { immediate: true });
 
 const go = (path, key) => {
-  active.value = key || (path === '/' ? 'home' : 'components');
+  // 直接按目标路径推导高亮，不依赖 key，避免点"组件"却进了 install 页
+  syncActive(path);
   sidebarOpen.value = false;
   if (path !== route.path) router.push(path);
 };
@@ -169,6 +173,9 @@ const isMac = computed(() => typeof navigator !== 'undefined' && /Mac|iPhone|iPa
   display: flex;
   align-items: center;
   gap: 8px;
+  /* 窄屏下必须允许收缩，否则 icon 按钮会把导航撑出视口 */
+  min-width: 0;
+  flex-shrink: 1;
 }
 .search-trigger {
   display: flex;
@@ -214,6 +221,14 @@ const isMac = computed(() => typeof navigator !== 'undefined' && /Mac|iPhone|iPa
 @media (max-width: 1024px) {
   .site-header__inner { gap: 16px; }
   .search-trigger { min-width: 0; span, kbd { display: none; } padding: 8px; }
+}
+
+/* 小屏：icon 按钮收紧间距，避免整排按钮把页面顶出横向滚动 */
+@media (max-width: 640px) {
+  .site-header__inner { gap: 10px; }
+  .site-actions { gap: 2px; }
+  .icon-btn { width: 30px; height: 30px; }
+  .menu-btn { display: grid; }
 }
 @media (max-width: 760px) {
   .site-nav { display: none; }

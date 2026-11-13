@@ -1,7 +1,7 @@
 <template>
   <div class="iv-demo2">
     <t-image
-      :src="single"
+      :src="single.src"
       :width="180"
       :height="118"
       fit="cover"

@@ -435,12 +435,16 @@ function clearSelection() {
 const colspan = computed(() => columns.value.length + (props.selectable ? 1 : 0));
 
 const bodyStyle = computed(() => {
-  if (props.maxHeight === '' && !props.fixedHeader) return {};
-  const h = typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : props.maxHeight;
-  return {
-    maxHeight: h || undefined,
-    overflowY: props.fixedHeader ? 'auto' : undefined
+  const style = {
+    // 窄屏超宽时内部横向滚动
+    overflowX: 'auto'
   };
+  if (props.maxHeight === '' && !props.fixedHeader) return style;
+
+  const h = typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : props.maxHeight;
+  style.maxHeight = h || undefined;
+  if (props.fixedHeader) style.overflowY = 'auto';
+  return style;
 });
 
 function onRowClick(row, index, e) {
@@ -502,6 +506,9 @@ defineExpose({ clearSelection, goPage, sortState, filterState });
 
   &__body {
     position: relative;
+    /* 窄屏兜底：表格内容超宽时在组件内部横向滚动，不把父级顶出视口 */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   &.is-fixed-head &__body {
@@ -934,7 +941,11 @@ table{
   border-collapse: separate;
   box-sizing: border-box;
   text-indent: initial;
-  border-spacing: 2px;
+  /*
+   * 必须是 0：这里写 2px 会让表格比容器宽 4px（左右各 2px），
+   * 直接导致表格在文档里右侧溢出、并与容器边框重合。
+   */
+  border-spacing: 0;
   border-color: grey;
 }
 

@@ -9,6 +9,13 @@ import preview from '@/components/preview.vue'
 
 #### 可拖拽调整两栏尺寸的分割布局
 
+> **与 Resizable 的关系**：Splitter 是「两栏按百分比分割」的定型组件，
+> 功能上等价于 [Resizable 伸缩框](/penguinui/resizable) 里 `t-resizable-group`
+> 的两栏用法（`default-sizes` 传两个值 + `#start` / `#end` 插槽）。
+> 需要 **三栏及以上**、或需要同时「拖拽改尺寸 + 拖拽改位置」时，
+> 直接用 `t-resizable-group` 更灵活；Splitter 保留是为了兼容既有用法与
+> 更简洁的两栏 API（`v-model` 直接绑定百分比）。
+
 <br/>
 
 ## 基本使用

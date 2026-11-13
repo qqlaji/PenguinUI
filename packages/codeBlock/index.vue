@@ -281,6 +281,9 @@ defineExpose({ copy });
     font-size: 13px;
     line-height: 1.7;
     tab-size: 2;
+    /* 至少保证自身不撑破父级 */
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   &__code {
@@ -291,6 +294,9 @@ defineExpose({ copy });
   &__line {
     display: flex;
     align-items: flex-start;
+    /* 行宽由内容决定，配合 __lc 的 white-space: pre 触发 pre 横向滚动 */
+    width: max-content;
+    min-width: 100%;
   }
 
   &__ln {
@@ -307,8 +313,8 @@ defineExpose({ copy });
   &__lc {
     flex: 1;
     min-width: 0;
-    white-space: pre-wrap;
-    word-break: break-word;
+    /* 不折行：长行交给 pre 横向滚动，保持代码缩进可读；折行会把代码压得没法看 */
+    white-space: pre;
   }
 
   &__plain {

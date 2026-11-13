@@ -68,7 +68,9 @@ export default [
     { 'title-cn': 'Upload 上传', 'title-en': 'Upload', path: '/penguinui/upload', keywords: 'upload 上传 文件 拖拽 进度 队列', isNew: true },
     { 'title-cn': 'InputOTP 验证码', 'title-en': 'InputOTP', path: '/penguinui/inputOtp', keywords: 'inputotp 验证码 短信 一次性密码 otp', isNew: true },
     { 'title-cn': 'Flex 弹性布局', 'title-en': 'Flex', path: '/penguinui/flex', keywords: 'flex 弹性 布局 居中 间距', isNew: true },
-    { 'title-cn': 'Splitter 分隔面板', 'title-en': 'Splitter', path: '/penguinui/splitter', keywords: 'splitter 分隔 拖拽 分栏 面板', isNew: true }
+    { 'title-cn': 'Splitter 分隔面板', 'title-en': 'Splitter', path: '/penguinui/splitter', keywords: 'splitter 分隔 拖拽 分栏 面板', isNew: true },
+    { 'title-cn': 'Resizable 伸缩框', 'title-en': 'Resizable', path: '/penguinui/resizable', keywords: 'resizable 伸缩 缩放 拖拽 改变大小 resize 组合', isNew: true },
+    { 'title-cn': 'DragMove 拖拽移动', 'title-en': 'DragMove', path: '/penguinui/dragMove', keywords: 'dragmove 拖拽 拖动 移动 位置 自由 drag', isNew: true }
         ]
     },
     {
@@ -135,7 +137,7 @@ export default [
             { 'title-cn': 'Tag 标签', 'title-en': 'Tag', path: '/penguinui/tag', keywords: 'tag 标签 状态', isNew: true },
             { 'title-cn': 'Empty 空状态', 'title-en': 'Empty', path: '/penguinui/empty', keywords: 'empty 空状态 无数据', isNew: true },
             { 'title-cn': 'Skeleton 骨架屏', 'title-en': 'Skeleton', path: '/penguinui/skeleton', keywords: 'skeleton 骨架屏 加载占位', isNew: true },
-    { 'title-cn': 'Carousel 走马灯', 'title-en': 'Carousel', path: '/penguinui/carousel', keywords: 'carousel 走马灯 轮播 banner', isNew: true },
+    { 'title-cn': 'Carousel 轮播图', 'title-en': 'Carousel', path: '/penguinui/carousel', keywords: 'carousel 走马灯 轮播 banner', isNew: true },
     { 'title-cn': 'Image 图片', 'title-en': 'Image', path: '/penguinui/image', keywords: 'image 图片 预览 放大 缩放', isNew: true },
     { 'title-cn': 'Segmented 分段控制器', 'title-en': 'Segmented', path: '/penguinui/segmented', keywords: 'segmented 分段 切换 选项卡', isNew: true },
     { 'title-cn': 'List 列表', 'title-en': 'List', path: '/penguinui/list', keywords: 'list 列表 容器 加载 空状态', isNew: true },
@@ -145,7 +147,10 @@ export default [
     { 'title-cn': 'ImageViewer 图片查看器', 'title-en': 'ImageViewer', path: '/penguinui/imageViewer', keywords: 'imageviewer 图片 查看器 预览 放大 缩放 画廊', isNew: true },
     { 'title-cn': 'CodeBlock 代码块', 'title-en': 'CodeBlock', path: '/penguinui/codeBlock', keywords: 'codeblock 代码块 高亮 语法 复制 行号', isNew: true },
     { 'title-cn': 'QRCode 二维码', 'title-en': 'QRCode', path: '/penguinui/qrcode', keywords: 'qrcode 二维码 扫码 编码 logo', isNew: true },
-    { 'title-cn': 'Watermark 水印', 'title-en': 'Watermark', path: '/penguinui/watermark', keywords: 'watermark 水印 防泄漏 图片', isNew: true }
+    { 'title-cn': 'Watermark 水印', 'title-en': 'Watermark', path: '/penguinui/watermark', keywords: 'watermark 水印 防泄漏 图片', isNew: true },
+    { 'title-cn': 'AudioPlayer 音频播放器', 'title-en': 'AudioPlayer', path: '/penguinui/audioPlayer', keywords: 'audioplayer 音频 播放器 音乐 声音 波形 audio', isNew: true },
+    { 'title-cn': 'VideoPlayer 视频播放器', 'title-en': 'VideoPlayer', path: '/penguinui/videoPlayer', keywords: 'videoplayer 视频 播放器 全屏 画中画 弹幕 video', isNew: true },
+    { 'title-cn': 'Chat 对话', 'title-en': 'Chat', path: '/penguinui/chat', keywords: 'chat 对话 会话 AI 聊天 消息 markdown 流式', isNew: true }
         ]
     },
     {

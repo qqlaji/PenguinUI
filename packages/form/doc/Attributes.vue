@@ -19,7 +19,9 @@ const state = reactive({
       { attr: 'labelPosition', type: 'string', red: '标签位置：right / left / top', def: "'right'" },
       { attr: 'inline', type: 'boolean', red: '行内表单模式', def: 'false' },
       { attr: 'disabled', type: 'boolean', red: '禁用整个表单', def: 'false' },
-      { attr: 'showMessage', type: 'boolean', red: '是否显示校验错误信息', def: 'true' }
+      { attr: 'showMessage', type: 'boolean', red: '是否显示校验错误信息', def: 'true' },
+      { attr: 'scrollToError', type: 'boolean', red: '校验失败时滚动到第一个错误字段', def: 'false' },
+      { attr: 'scrollOffset', type: 'number', red: 'scrollToError 的滚动偏移量（px）', def: '60' }
     ]
   }
 })

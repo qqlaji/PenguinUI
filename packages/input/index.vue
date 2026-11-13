@@ -8,7 +8,7 @@
         <i class="clearable-icon iconfont t-icon-close" v-if="!showPassword&&clearable&&modelValue!==''" @click="clear"></i>
       </transition>
       <i :class="['right-icon','iconfont',resolvedRightIcon]" v-if="!showPassword&&resolvedRightIcon!==''"></i>
-      <i v-if="showPassword"  :class="['password-icon','iconfont t-icon-browse']" @click="showPwd(type)"></i>
+      <i v-if="showPassword"  :class="['password-icon','iconfont t-icon-browse']" @click="showPwd"></i>
     </div>
     <span v-if="$slots.suffix" class="penguin-input-affix"><slot name="suffix" /></span>
     <span v-if="showWordLimit" class="penguin-input-limit">{{ valueLength }} / {{ maxlength || '∞' }}</span>
@@ -72,7 +72,16 @@ const innerStyle = computed(() => hasAffix.value
   : {})
 const statusClass = computed(() => props.status ? `penguin-input-status-${props.status}` : '')
 const isStyle = ref({})
-const inptype = ref(props.type)
+/**
+ * 实际渲染的 input type：
+ * props.type 变化要能跟随（原来是 ref 只在初始化时读一次，动态改不生效），
+ * 同时保留「小眼睛」切换明文的内部状态。
+ */
+const pwdVisible = ref(false)
+const inptype = computed(() => {
+  if (props.type === 'password') return pwdVisible.value ? 'text' : 'password'
+  return props.type || 'text'
+})
 let focusStyle = {
   'width':!!slot.btn?'auto':'100%',
   'float':!!slot.btn?'left':'auto',
@@ -110,8 +119,8 @@ const clear = (e) =>{
   emit('clear')
 }
 // 显示密码
-const showPwd = (e) =>{
-  inptype.value = inptype.value === 'text' ? 'password' : 'text'
+const showPwd = () =>{
+  pwdVisible.value = !pwdVisible.value
 }
 const isClass = computed(()=>{
   return [
